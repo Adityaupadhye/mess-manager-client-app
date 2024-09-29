@@ -1,0 +1,24 @@
+.upper-half {
+    height: 50vh; /* Adjusts upper half height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .qr-box {
+    width: 300px; /* Adjust the size of the rectangle */
+    height: 300px;
+    border: 2px solid #343a40; /* Dark border for rectangle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .bottom-half {
+    height: 50vh; /* Adjusts bottom half height */
+    display: flex;
+    align-items: center; /* Vertically centers content */
+    justify-content: center; /* Horizontally centers content */
+  }
+  .bg-dark {
+    background-color: #343a40;
+    color: white;
+  }
