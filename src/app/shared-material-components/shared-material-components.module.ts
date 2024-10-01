@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 
 
 
@@ -11,7 +13,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     CommonModule
   ],
   exports: [
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatCardModule
   ],
   providers: [
     MatSnackBar
