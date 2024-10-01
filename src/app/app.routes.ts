@@ -6,6 +6,10 @@ import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
     {
+        path: 'admin/scan',
+        component: ScannerComponent
+    },
+    {
         path: 'student/home',
         component: StudentHomeComponent
     },
