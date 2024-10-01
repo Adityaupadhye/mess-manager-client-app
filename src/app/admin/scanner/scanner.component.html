@@ -1,0 +1,48 @@
+<!-- <p>scanner works!</p> -->
+<div class="contain-fluid bg-dark">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- scanner -->
+            <zxing-scanner
+            (scanSuccess)="onScanSuccess($event)"
+            [autofocusEnabled]="true"
+            [enable]="isScanningEnabled"
+            (camerasFound)="onCamerasFound($event)"
+            (camerasNotFound)="onCameraError($event)"
+            (permissionResponse)="hasPermission = $event"
+            [device]="currentDevice"
+            [delayBetweenScanSuccess]="3000"
+            class="p-4"
+            >
+          </zxing-scanner>
+
+          <div class="row my-2 p-4">
+            <div class="col-md-3">
+
+                <button mat-raised-button (click)="toggleScanning()">Toggle Scanning</button>
+            </div>
+            <div class="col-md-3">
+                <button mat-raised-button (click)="resetScanner()">Reset Scanner</button>
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
+          </div>
+          
+          <div *ngIf="scannedResult" class="text-white">
+            <p>Scanned Result: {{ scannedResult }}</p>
+          </div>          
+        </div>
+
+        <div class="col-md-6">
+            <div class="p-4 text-white">
+                <div>
+                    @if (!_scanningError) {
+                        <h2>{{studentData.studentName}}</h2>
+                        <h3>{{studentData.rollNo}}</h3>
+                    }
+                </div>
+                <h2 *ngIf="_scanningError">Invalid QR Code</h2>
+            </div>
+        </div>
+    </div>
+</div>
