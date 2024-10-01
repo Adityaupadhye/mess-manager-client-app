@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
 
 
 
@@ -14,6 +15,8 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
   ],
   exports: [
     MatButtonModule,
+    MatFormFieldModule,
+    MatCardModule,
     MatFormFieldModule,
     MatSelectModule
   ],

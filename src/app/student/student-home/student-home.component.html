@@ -1,37 +1,39 @@
-
-  <div class="container-fluid">
-    <!-- Upper Half -->
-    <div class="row upper-half">
-      <div class="col-md-12 d-flex justify-content-center align-items-center">
-        <div class="qr-box">
-          <!-- QR Code or Image can be inserted here -->
-          <qrcode [qrdata]="studentJsonString" [width]="350" [errorCorrectionLevel]="'M'"></qrcode>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Bottom Half -->
-    <div class="row bottom-half">
-      <div class="col-md-8 bg-dark">
-        <h2 class="text-center">Student Information</h2>
-        <table class="table table-bordered table-striped text-center">
-          
-          <tbody>
-            <tr>
-              <td>Name: </td><td>{{studentData.studentName}}</td>
-            </tr>
-            <tr>
-              <td>Roll No: </td><td>{{studentData.rollNo}}</td>
-            </tr>
-            <tr>  
-              <td>Hostel: </td><td>{{studentData.hostel}}</td>
-            </tr>
-            <tr>
-              <td>Room No: </td><td>{{studentData.roomNo}}</td>
-            </tr>
-          </tbody>
-        </table>
+<div class="container-fluid p-0">
+  <!-- Upper Half -->
+  <div class="row upper-half">
+    <div class="col-12 d-flex justify-content-center align-items-center">
+      <div class="qr-box">
+        <!-- QR Code or Image can be inserted here -->
+        <qrcode [qrdata]="studentJsonString" [width]="350" [errorCorrectionLevel]="'M'"></qrcode>
       </div>
     </div>
   </div>
 
+  <!-- Bottom Half -->
+  <div class="row bottom-half">
+    <div class="col-md-10 col-lg-8 bg-dark mx-auto">
+      <h2 class="text-center mb-4">Student Information</h2>
+      <table class="table table-bordered table-hover table-striped text-center">
+        <tbody>
+          <tr>
+            <td class="font-weight-bold">Name:</td>
+            <td>{{studentData.studentName}}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold">Roll No:</td>
+            <td>{{studentData.rollNo}}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold">Hostel:</td>
+            <td>{{studentData.hostel}}</td>
+          </tr>
+          <tr>
+            <td class="font-weight-bold">Room No:</td>
+            <td>{{studentData.role}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+
+</div>

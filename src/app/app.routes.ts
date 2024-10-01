@@ -1,5 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { StudentHomeComponent } from './student/student-home/student-home.component';
+import { LoginComponent } from './Auth/login/login.component';
 import { ScannerComponent } from './admin/scanner/scanner.component';
 import { NgModule } from '@angular/core';
 
@@ -16,6 +17,10 @@ export const routes: Routes = [
     {
         path: 'admin/scan',
         component: ScannerComponent
+    },
+    {
+        path: 'auth/login',
+        component: LoginComponent
     }
 ];
 
