@@ -19,12 +19,15 @@ export class StudentHomeComponent {
   role: number = -1;
 
   studentData: any = {}; // Initialize an empty object
+  studentJsonString: string = '';
   ngOnInit() {
-    // Retrieve data from localStorage
-    this.name = localStorage.getItem('name') || '';
-    this.roll_no = localStorage.getItem('roll_no') || '';
-    this.hostel = localStorage.getItem('hostel') || '';
-    this.role = parseInt(localStorage.getItem('role') || '-1', 10);
+    const savedUserDetails = localStorage.getItem('userDetails');
+if (savedUserDetails) {
+  const userDetails = JSON.parse(savedUserDetails);
+  this.name = userDetails['name']; 
+  this.roll_no = userDetails['roll_no'];
+  this.hostel = userDetails['hostel'];
+}
 
     // Fetch student data from your backend API or database
     this.studentData = {
@@ -33,14 +36,14 @@ export class StudentHomeComponent {
       hostel: this.hostel,    //"H17"
       role: this.role         //"2112",                
     };
+    this.studentJsonString = JSON.stringify(this.studentData);
   }
 
   
 
-  studentJsonString: string;
+  
   
   constructor(){
-    this.studentJsonString = JSON.stringify(this.studentData);
     // this.studentJsonString = " Hekjkjgherjkgkskljkgfcggjyhtcghnijhgtrdgfhyj765ftrfyuiysaghjkihuygufdiSdhyjukozfhyujgbyyuK7JHGBUYUNIDTSUFFI"
   }
 }
