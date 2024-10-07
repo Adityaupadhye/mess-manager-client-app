@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IndexDbServiceService } from '../../services/localdb/index-db-service.service';
-import { FoodCategory, INDEXED_DB_LOG_ENTRY_STORE_NAME, INDEXED_DB_USERS_STORE_NAME, PersonType } from '../../constants';
+import { FoodCategory, INDEXED_DB_LOG_ENTRY_STORE_NAME, INDEXED_DB_USERS_STORE_NAME, PersonType, Role } from '../../constants';
 import { LogEntry } from '../../data/log-entry';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 
@@ -19,25 +19,25 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 export class ScannerComponent implements OnInit {
 
   protected _scanningError = false;
-  protected foodCategories = Object.keys(FoodCategory).filter(key => isNaN(Number(key))); ;
+  protected foodCategories = Object.values(FoodCategory);
 
   scannedResult: string = 'res';
   isScanningEnabled = false;
   hasDevices: boolean = false;
   hasPermission: boolean = false;
   availableDevices: MediaDeviceInfo[] = [];
-  currentDevice: MediaDeviceInfo | undefined;
+  // currentDevice: MediaDeviceInfo | undefined;
   selectedDevice: MediaDeviceInfo | undefined;
 
   isUserValid: boolean = false;
-  currentFoodCategory: FoodCategory = FoodCategory.NA;
+  currentFoodCategory: FoodCategory = FoodCategory.BREAKFAST;
   currentPersonType: PersonType = PersonType.STUDENT;
 
   studentData = {
     'name': '',
     'hostel': '',
     'roll_no': '',
-    'role': -1
+    'role': ''
   }
 
   // {"studentName":"Mohammad Aasim","rollNo":"24M2118","hostel":"H17","roomNo":"2112"}
@@ -50,11 +50,13 @@ export class ScannerComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('category: ', this.foodCategories);
+    this.getAvailableDevices();
   }
 
 
   async getAvailableDevices() {
     const devices = await this.getVideoInputDevices();
+    console.log('available devices: ', devices);
     this.availableDevices = devices;
     this.selectedDevice = this.availableDevices[0]; // Select the first camera by default
   }
@@ -66,6 +68,7 @@ export class ScannerComponent implements OnInit {
 
   onDeviceChange(device: MediaDeviceInfo) {
     this.selectedDevice = device;
+    console.log('selected device: ', this.selectedDevice);
   }
 
   protected toggleScanning(): boolean {
@@ -76,10 +79,13 @@ export class ScannerComponent implements OnInit {
   onCamerasFound(devices: MediaDeviceInfo[]): void {
     this.hasDevices = true;
     this.availableDevices = devices;
+    console.log('on cameras found: ', devices);
+    this.selectedDevice = devices[0];
+    
     // Select the first available camera
-    if (devices.length > 0) {
-      this.currentDevice = devices[0];
-    }
+    // if (devices.length > 0) {
+    //   this.currentDevice = devices[0];
+    // }
   }
 
   onScanSuccess(result: string) {
@@ -89,7 +95,7 @@ export class ScannerComponent implements OnInit {
 
     try {
       let parsedStudentData = JSON.parse(result);
-      this.studentData = parsedStudentData;
+      // this.studentData = parsedStudentData;
 
       //  if parsed successfully, check for hostel validity
       this.checkUserValidity(parsedStudentData);
@@ -111,7 +117,7 @@ export class ScannerComponent implements OnInit {
       'name': '',
       'hostel': '',
       'roll_no': '',
-      'role': -1
+      'role': ''
     };
     this.scannedResult = '';
     this._scanningError = false;
@@ -155,7 +161,7 @@ export class ScannerComponent implements OnInit {
       roll_no: parsedUserData['roll_no'],
       food_category: this.currentFoodCategory,
       timestamp: Date.now(),
-      person_type: personType
+      person_type: parsedUserData['role']
     }
 
     // adding log entry locally

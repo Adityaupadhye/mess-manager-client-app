@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SharedMaterialComponentsModule } from './shared-material-components/shared-material-components.module';
-import { LS_USERS_LAST_SYNC_TIME_KEY } from './constants';
+import { LS_USERS_LAST_SYNC_TIME_KEY, Role } from './constants';
 import { SyncService } from './services/sync/sync.service';
+import { User } from './data/user';
 
 @Component({
   selector: 'app-root',
@@ -21,11 +22,18 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this._checkUsersSyncState();
+    let _loggedInUser = localStorage.getItem('userDetails');
+    if(_loggedInUser != null) {
+      let loggedInUser = JSON.parse(_loggedInUser);
+
+      if(loggedInUser.role == Role.ADMIN) {
+        this._checkUsersSyncState(loggedInUser);
+      }
+    }
     
   }
 
-  private _checkUsersSyncState() {
+  private _checkUsersSyncState(userDetails: User) {
     console.log('syncing users locally');
 
     let last_sync_time_users = localStorage.getItem(LS_USERS_LAST_SYNC_TIME_KEY);
@@ -33,13 +41,13 @@ export class AppComponent implements OnInit {
     if(!last_sync_time_users) {
       // sync users
 
-      this.syncService.fetchUsers();
+      this.syncService.fetchUsers(userDetails.role, userDetails.hostel);
 
     }
     else {
 
       if(!this._dateCheck(last_sync_time_users)) {
-        this.syncService.fetchUsers();
+        this.syncService.fetchUsers(userDetails.role, userDetails.hostel);
       }
       console.log('users already synced');
 

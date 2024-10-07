@@ -16,7 +16,7 @@ export class StudentHomeComponent {
   name: string = '';
   roll_no: string = '';
   hostel: string = '';
-  role: number = -1;
+  role: string = '';
 
   studentData: any = {}; // Initialize an empty object
   studentJsonString: string = '';
@@ -27,6 +27,7 @@ if (savedUserDetails) {
   this.name = userDetails['name']; 
   this.roll_no = userDetails['roll_no'];
   this.hostel = userDetails['hostel'];
+  this.role = userDetails['role']
 }
 
     // Fetch student data from your backend API or database

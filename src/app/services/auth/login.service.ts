@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from '../../constants';
 
-interface ApiResponse {
+export interface ApiResponse {
   name: string;
   roll_no: string;
   hostel: string;
@@ -18,9 +19,11 @@ export class LoginService {
 
   constructor(private http: HttpClient) { }
 
-  login(username: string, password: string): Observable<ApiResponse> {
+  login(username: string, password: string) {
     const body = { username, password }; // Adjust the payload as per your API
 
-    return this.http.post<ApiResponse>(this.apiUrl, body);
+    return this.http.post(API_BASE_URL+'login/', body, {
+      observe: 'response'
+    });
   }
 }

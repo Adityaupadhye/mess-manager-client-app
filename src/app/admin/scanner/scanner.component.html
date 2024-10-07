@@ -10,8 +10,8 @@
         <div class="col-md-4">
             <mat-form-field class="w-100">
                 <mat-label>Select</mat-label>
-                <mat-select [(value)]="currentFoodCategory" (selectionChange)="onCategoryChange($event)">
-                    <mat-option *ngFor="let category of foodCategories; let idx = index;" [value]="idx">
+                <mat-select [(value)]="currentFoodCategory">
+                    <mat-option *ngFor="let category of foodCategories" [value]="category">
                         {{category}}
                     </mat-option>
                 </mat-select>
@@ -30,7 +30,7 @@
                 (camerasNotFound)="onCameraError($event)"
                 (permissionResponse)="hasPermission = $event"
                 [device]="selectedDevice" 
-                [delayBetweenScanSuccess]="2000"
+                [delayBetweenScanSuccess]="1000"
                 class="p-4">
             </zxing-scanner>
 
@@ -56,9 +56,9 @@
                 <div class="col">
                     <p class="text-white">Select Camera</p>
                     <mat-form-field class="w-100">
-                        <mat-label>Select</mat-label>
-                        <mat-select [(value)]="currentFoodCategory" (selectionChange)="onDeviceChange($event.value)">
-                            <mat-option *ngFor="let device of availableDevices; let i = index" [value]="device.deviceId">
+                        <mat-label>Select Camera</mat-label>
+                        <mat-select [(value)]="selectedDevice" (selectionChange)="onDeviceChange($event.value)">
+                            <mat-option *ngFor="let device of availableDevices; let i = index" [value]="device">
                                 {{ device.label || 'Camera ' + (i + 1) }}
                             </mat-option>
                         </mat-select>

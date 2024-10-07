@@ -66,7 +66,11 @@
               "buildTarget": "mess-manager-client-app:build:production"
             },
             "development": {
-              "buildTarget": "mess-manager-client-app:build:development"
+              "buildTarget": "mess-manager-client-app:build:development",
+              "ssl": true,
+              "sslKey": "ssl/localhost.key",
+              "sslCert": "ssl/localhost.crt",
+              "host": "0.0.0.0"
             }
           },
           "defaultConfiguration": "development"

@@ -4,5 +4,5 @@ export interface LogEntry {
     roll_no: string,
     food_category: FoodCategory,
     timestamp: number,
-    person_type: PersonType,
+    person_type: string,
 }
