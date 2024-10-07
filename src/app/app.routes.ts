@@ -8,7 +8,7 @@ export const routes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'admin/scan',
+        redirectTo: 'auth/login',
     },
     {
         path: 'admin/scan',
