@@ -1,44 +1,82 @@
 <!-- <p>scanner works!</p> -->
 <div class="contain-fluid bg-dark">
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row m-0 p-3 text-white border-bottom">
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <p class="p-3">
+                Current Meal:
+            </p>
+        </div>
+        <div class="col-md-4">
+            <mat-form-field class="w-100">
+                <mat-label>Select</mat-label>
+                <mat-select [(value)]="currentFoodCategory" (selectionChange)="onCategoryChange($event)">
+                    <mat-option *ngFor="let category of foodCategories; let idx = index;" [value]="idx">
+                        {{category}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row m-0 p-4">
+        <div class="col-md-6 border-end">
             <!-- scanner -->
-            <zxing-scanner
-            (scanSuccess)="onScanSuccess($event)"
-            [autofocusEnabled]="true"
-            [enable]="isScanningEnabled"
-            (camerasFound)="onCamerasFound($event)"
-            (camerasNotFound)="onCameraError($event)"
-            (permissionResponse)="hasPermission = $event"
-            [device]="currentDevice"
-            [delayBetweenScanSuccess]="3000"
-            class="p-4"
-            >
-          </zxing-scanner>
+            <zxing-scanner 
+                (scanSuccess)="onScanSuccess($event)" 
+                [autofocusEnabled]="true" 
+                [enable]="isScanningEnabled"
+                (camerasFound)="onCamerasFound($event)" 
+                (camerasNotFound)="onCameraError($event)"
+                (permissionResponse)="hasPermission = $event"
+                [device]="selectedDevice" 
+                [delayBetweenScanSuccess]="3000"
+                class="p-4">
+            </zxing-scanner>
 
-          <div class="row my-2 p-4">
-            <div class="col-md-3">
+            <div class="row my-2 p-4">
+                <div class="col-md-3">
 
-                <button mat-raised-button (click)="toggleScanning()">Toggle Scanning</button>
+                    <button mat-raised-button (click)="toggleScanning()">Toggle Scanning</button>
+                </div>
+                <div class="col-md-3">
+                    <button mat-raised-button (click)="resetScanner()">Reset Scanner</button>
+                </div>
+                <div class="col-md-3">
+                    <!-- <select (change)="onDeviceChange($event.target.value)">
+                        <option *ngFor="let device of availableDevices; let i = index" [value]="device.deviceId">
+                            {{ device.label || 'Camera ' + (i + 1) }}
+                        </option>
+                    </select> -->
+                </div>
+                <div class="col-md-3"></div>
             </div>
-            <div class="col-md-3">
-                <button mat-raised-button (click)="resetScanner()">Reset Scanner</button>
+
+            <div class="row">
+                <div class="col">
+                    <p class="text-white">Select Camera</p>
+                    <mat-form-field class="w-100">
+                        <mat-label>Select</mat-label>
+                        <mat-select [(value)]="currentFoodCategory" (selectionChange)="onDeviceChange($event.value)">
+                            <mat-option *ngFor="let device of availableDevices; let i = index" [value]="device.deviceId">
+                                {{ device.label || 'Camera ' + (i + 1) }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div>
-          </div>
-          
-          <div *ngIf="scannedResult" class="text-white">
-            <p>Scanned Result: {{ scannedResult }}</p>
-          </div>          
+
+            <div *ngIf="scannedResult" class="text-white">
+                <p>Scanned Result: {{ scannedResult }}</p>
+            </div>
         </div>
 
         <div class="col-md-6">
             <div class="p-4 text-white">
                 <div>
                     @if (!_scanningError) {
-                        <h2>{{studentData.studentName}}</h2>
-                        <h3>{{studentData.rollNo}}</h3>
+                    <h2>{{studentData.name}}</h2>
+                    <h3>{{studentData.roll_no}}</h3>
                     }
                 </div>
                 <h2 *ngIf="_scanningError">Invalid QR Code</h2>
