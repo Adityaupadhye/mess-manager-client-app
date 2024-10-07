@@ -22,8 +22,8 @@ body, html {
 
 /* QR Box */
 .qr-box {
-  width: 350px;
-  height: 350px;
+  width: 80%;
+  /* height: 350px; */
   border: 2px solid #343a40;
   border-radius: 10px;
   display: flex;

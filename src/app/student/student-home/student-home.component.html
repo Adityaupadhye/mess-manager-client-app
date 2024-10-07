@@ -2,9 +2,9 @@
   <!-- Upper Half -->
   <div class="row upper-half">
     <div class="col-12 d-flex justify-content-center align-items-center">
-      <div class="qr-box">
+      <div class="card">
         <!-- QR Code or Image can be inserted here -->
-        <qrcode [qrdata]="studentJsonString" [width]="350" [errorCorrectionLevel]="'M'"></qrcode>
+        <qrcode [qrdata]="studentJsonString" [width]="300" [errorCorrectionLevel]="'M'"></qrcode>
       </div>
     </div>
   </div>
@@ -17,11 +17,11 @@
         <tbody>
           <tr>
             <td class="font-weight-bold">Name:</td>
-            <td>{{studentData.studentName}}</td>
+            <td>{{studentData.name}}</td>
           </tr>
           <tr>
             <td class="font-weight-bold">Roll No:</td>
-            <td>{{studentData.rollNo}}</td>
+            <td>{{studentData.roll_no}}</td>
           </tr>
           <tr>
             <td class="font-weight-bold">Hostel:</td>

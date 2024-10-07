@@ -31,8 +31,8 @@ if (savedUserDetails) {
 
     // Fetch student data from your backend API or database
     this.studentData = {
-      studentName: this.name, //"Mohammad Aasim"
-      rollNo: this.roll_no,      //"24M2118"
+      name: this.name, //"Mohammad Aasim"
+      roll_no: this.roll_no,      //"24M2118"
       hostel: this.hostel,    //"H17"
       role: this.role         //"2112",                
     };
