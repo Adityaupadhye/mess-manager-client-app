@@ -6,6 +6,11 @@ import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
     {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'admin/scan',
+    },
+    {
         path: 'admin/scan',
         component: ScannerComponent
     },

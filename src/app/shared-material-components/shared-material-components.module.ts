@@ -18,6 +18,7 @@ import { MatCardModule } from '@angular/material/card';
     MatFormFieldModule,
     MatCardModule,
     MatFormFieldModule,
+    MatSelectModule,
     MatSelectModule
   ],
   providers: [
