@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
 import { Role } from '../../constants';
 import { SyncService } from '../../services/sync/sync.service';
+import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -22,7 +23,8 @@ export class LoginComponent {
   constructor(
     private loginService: LoginService, 
     private router: Router,
-    private syncService: SyncService
+    private syncService: SyncService,
+    private spinner: NgxSpinnerService
   ) {
     // Check if userDetails already exists in localStorage
     const storedUserDetails = localStorage.getItem('userDetails');
@@ -96,8 +98,10 @@ export class LoginComponent {
     //   alert('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
     //   return;
     // }
+    this.spinner.show();
     this.loginService.login(trimmedUsername, trimmedPassword).subscribe({
       next: (response: HttpResponse<ApiResponse> | any) => {
+        this.spinner.hide();
         // Assuming response.Result indicates success
         if (response.status == 200) {
 
@@ -132,6 +136,7 @@ export class LoginComponent {
       },
       error: (err) => {
         // Handle error
+        this.spinner.hide();
         console.error('Login Error:', err);
         alert(err.error.error);
 

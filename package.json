@@ -24,6 +24,7 @@
     "angularx-qrcode": "^18.0.1",
     "bootstrap": "^5.3.3",
     "ngx-indexed-db": "^19.0.0",
+    "ngx-spinner": "^17.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.10"

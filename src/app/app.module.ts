@@ -10,7 +10,8 @@ import { SharedMaterialComponentsModule } from './shared-material-components/sha
 import { DbModuleModule } from './db-module/db-module.module';
 import { AppRoutingModule } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { HttpClientModule, provideHttpClient } from '@angular/common/http';
     FormsModule,
     SharedMaterialComponentsModule,
     DbModuleModule,
+    NgxSpinnerModule
   ],
   providers: [
     provideHttpClient(),
