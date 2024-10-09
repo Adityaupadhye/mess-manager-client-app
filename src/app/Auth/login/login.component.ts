@@ -84,8 +84,8 @@ export class LoginComponent {
     // }
 
     // Validate minimum length
-    if (trimmedUsername.length < 3) {
-      alert('Username must be at least 3 characters long.');
+    if (trimmedUsername.length < 6) {
+      alert('Username must be at least 6 characters long.');
       return;
     }
 
@@ -132,9 +132,7 @@ export class LoginComponent {
             this.router.navigate(['admin/scan']);
           }
         }
-        // else {
-        //   console.log('Login Failed:', this.Message); // Handle failure message
-        // }
+        
       },
       error: (err) => {
         // Handle error
@@ -146,8 +144,6 @@ export class LoginComponent {
     });
   }
   
-  onSubmit(){
-    
-  }
+  
 }
 

@@ -1,4 +1,10 @@
 
+.logo {
+    display: grid;
+    place-items: center;     /* Centers both horizontally and vertically */
+    height: 100%;            /* Ensure the height of the container is set */
+  }
+
   .login-container {
     display: flex;
     flex-direction: column;
