@@ -5,6 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -19,7 +21,10 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatSelectModule
+    MatSelectModule,
+    MatInputModule, 
+    MatButtonModule, 
+    MatIconModule
   ],
   providers: [
     MatSnackBar

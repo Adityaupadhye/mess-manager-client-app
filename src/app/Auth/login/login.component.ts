@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { SharedMaterialComponentsModule } from '../../shared-material-components/shared-material-components.module';
 import { ApiResponse, LoginService } from '../../services/auth/login.service';
 import { FormsModule } from '@angular/forms';
@@ -7,13 +7,14 @@ import { HttpResponse } from '@angular/common/http';
 import { Role } from '../../constants';
 import { SyncService } from '../../services/sync/sync.service';
 import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    SharedMaterialComponentsModule, FormsModule],
+    SharedMaterialComponentsModule, FormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -48,7 +49,8 @@ export class LoginComponent {
   }
 
 
-  showPassword: boolean = false; // To track password visibility
+  showPassword: boolean = true; // To track password visibility
+  
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
@@ -143,4 +145,9 @@ export class LoginComponent {
       }
     });
   }
+  
+  onSubmit(){
+    
+  }
 }
+
