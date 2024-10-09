@@ -3,6 +3,7 @@ import { IndexDbServiceService } from '../../services/localdb/index-db-service.s
 import { FoodCategory, INDEXED_DB_LOG_ENTRY_STORE_NAME, INDEXED_DB_USERS_STORE_NAME, PersonType, Role } from '../../constants';
 import { LogEntry } from '../../data/log-entry';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { LoginService } from '../../services/auth/login.service';
 
 @Component({
   selector: 'app-scanner',
@@ -43,7 +44,8 @@ export class ScannerComponent implements OnInit {
   // {"studentName":"Mohammad Aasim","rollNo":"24M2118","hostel":"H17","roomNo":"2112"}
 
   constructor(
-    private iDBService: IndexDbServiceService
+    private iDBService: IndexDbServiceService,
+    public loginService: LoginService,
   ) {
 
   }

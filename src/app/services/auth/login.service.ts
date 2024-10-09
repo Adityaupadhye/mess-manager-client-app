@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../../constants';
+import { Router } from '@angular/router';
 
 export interface ApiResponse {
   name: string;
@@ -15,9 +16,7 @@ export interface ApiResponse {
 })
 export class LoginService {
 
-  private apiUrl = 'https://api.example.com/login'; // Replace with your API URL
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(username: string, password: string) {
     const body = { username, password }; // Adjust the payload as per your API
@@ -25,5 +24,14 @@ export class LoginService {
     return this.http.post(API_BASE_URL+'login/', body, {
       observe: 'response'
     });
+  }
+
+
+  logout() {
+    // Clear local storage
+    localStorage.removeItem('userDetails');
+    
+    // Optionally, redirect to the login page or home page after logging out
+    this.router.navigate(['auth/login']); 
   }
 }

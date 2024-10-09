@@ -2,6 +2,8 @@ import { Component , OnInit} from '@angular/core';
 import { SharedMaterialComponentsModule } from '../../shared-material-components/shared-material-components.module';
 import { FormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angularx-qrcode'; 
+import { Router } from '@angular/router';
+import { LoginService } from '../../services/auth/login.service';
 
 @Component({
   selector: 'app-student-home',
@@ -12,6 +14,24 @@ import { QRCodeModule } from 'angularx-qrcode';
 })
 export class StudentHomeComponent {
 
+
+  //logout
+  constructor(
+    public loginService: LoginService
+  ){
+    
+  }
+
+  // logout() {
+  //   // Clear local storage
+  //   localStorage.removeItem('userDetails');
+    
+  //   // Optionally, redirect to the login page or home page after logging out
+  //   this.router.navigate(['auth/login']); 
+  // }
+
+
+  // show student data
   
   name: string = '';
   roll_no: string = '';
@@ -44,7 +64,5 @@ if (savedUserDetails) {
 
   
   
-  constructor(){
-    // this.studentJsonString = " Hekjkjgherjkgkskljkgfcggjyhtcghnijhgtrdgfhyj765ftrfyuiysaghjkihuygufdiSdhyjukozfhyujgbyyuK7JHGBUYUNIDTSUFFI"
-  }
+  
 }
