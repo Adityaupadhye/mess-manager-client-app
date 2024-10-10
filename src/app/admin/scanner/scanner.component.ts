@@ -97,7 +97,7 @@ export class ScannerComponent implements OnInit {
 
     try {
       let parsedStudentData = JSON.parse(result);
-      // this.studentData = parsedStudentData;
+      this.studentData = parsedStudentData;
 
       //  if parsed successfully, check for hostel validity
       this.checkUserValidity(parsedStudentData);
@@ -133,10 +133,11 @@ export class ScannerComponent implements OnInit {
   }
 
   checkUserValidity(parsedUserData: any) {
-    this.iDBService.getRecordByKey(INDEXED_DB_USERS_STORE_NAME, parsedUserData['roll_no'])
+    const userRollNo = parsedUserData['roll_no'];
+    this.iDBService.getRecordByKey(INDEXED_DB_USERS_STORE_NAME, userRollNo)
       .subscribe({
         next: (result) => {
-          console.log('record: ', result);
+          console.log(`user record with roll_no: ${userRollNo}: `, result);
 
           if (result != null) {
             this.isUserValid = true;
@@ -162,8 +163,9 @@ export class ScannerComponent implements OnInit {
     let currentLogEntry: LogEntry = {
       roll_no: parsedUserData['roll_no'],
       food_category: this.currentFoodCategory,
-      timestamp: Date.now(),
-      person_type: parsedUserData['role']
+      // timestamp: Date.now(),
+      timestamp: Math.floor(Date.now() / 1000),
+      type: parsedUserData['role']
     }
 
     // adding log entry locally

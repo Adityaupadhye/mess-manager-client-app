@@ -25,7 +25,7 @@ const dbConfig: DBConfig = {
         { name: 'name', keypath: 'name', options: { unique: false } },
         { name: 'food_category', keypath: 'food_category', options: { unique: false } },
         { name: 'timestamp', keypath: 'timestamp', options: { unique: false } },
-        { name: 'person_type', keypath: 'person_type', options: { unique: false } }
+        { name: 'type', keypath: 'type', options: { unique: false } }
       ]
     }
   ]

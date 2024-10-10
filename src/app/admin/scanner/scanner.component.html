@@ -1,11 +1,13 @@
 <!-- <p>scanner works!</p> -->
 <div class="contain-fluid bg-dark">
     <div class="row m-0 p-3 text-white border-bottom">
-        <div class="col-md-3"></div>
         <div class="col-md-3">
-            <p class="p-3">
+            <h3 class="p-3 fst-italic text-warning">SmartMeal</h3>
+        </div>
+        <div class="col-md-3">
+            <h3 class="p-3 text-end">
                 Current Meal:
-            </p>
+            </h3>
         </div>
         <div class="col-md-4">
             <mat-form-field class="w-100">
@@ -35,25 +37,21 @@
                 (permissionResponse)="hasPermission = $event"
                 [device]="selectedDevice" 
                 [delayBetweenScanSuccess]="1000"
-                class="p-4">
+                class="p-2">
             </zxing-scanner>
+            <h4 *ngIf="!isScanningEnabled" class="text-center text-white">
+                Camera is Off
+            </h4>
 
-            <div class="row my-2 p-4">
-                <div class="col-md-3">
-
-                    <button mat-raised-button (click)="toggleScanning()">Toggle Scanning</button>
+            <div class="row my-2 p-2">
+                <div class="col-md-6">
+                    <button class="w-100 m-0 p-2" mat-raised-button color="primary" [innerText]="isScanningEnabled? 'Turn Off Scanner' : 'Turn On Scanner'" (click)="toggleScanning()"></button>
                 </div>
-                <div class="col-md-3">
-                    <button mat-raised-button (click)="resetScanner()">Reset Scanner</button>
+                <div class="col-md-6">
+                    <button class="w-100 m-0 p-2" mat-raised-button (click)="resetScanner()">Reset Scanner</button>
                 </div>
-                <div class="col-md-3">
-                    <!-- <select (change)="onDeviceChange($event.target.value)">
-                        <option *ngFor="let device of availableDevices; let i = index" [value]="device.deviceId">
-                            {{ device.label || 'Camera ' + (i + 1) }}
-                        </option>
-                    </select> -->
-                </div>
-                <div class="col-md-3"></div>
+                <!-- <div class="col-md-3"></div> -->
+                <!-- <div class="col-md-3"></div> -->
             </div>
 
             <div class="row">
@@ -70,19 +68,21 @@
                 </div>
             </div>
 
-            <div *ngIf="scannedResult" class="text-white">
+            <!-- <div *ngIf="scannedResult" class="text-white">
                 <p>Scanned Result: {{ scannedResult }}</p>
-            </div>
+            </div> -->
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 border-start">
             <div class="p-4 text-white">
-                <div>
-                    @if (!_scanningError) {
+                <div *ngIf="!_scanningError && isUserValid">
                     <h2>{{studentData.name}}</h2>
                     <h3>{{studentData.roll_no}}</h3>
-                    }
+                    <h3>H-{{studentData.hostel}}</h3>
                 </div>
+                <h1 *ngIf="isUserValid == false && studentData.hostel != ''" class="text-danger">
+                    NOT ALLOWED
+                </h1>
                 <h2 *ngIf="_scanningError">Invalid QR Code</h2>
             </div>
         </div>

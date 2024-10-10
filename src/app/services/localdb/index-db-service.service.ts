@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { NgxIndexedDBService } from 'ngx-indexed-db';
+import { Key, NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,12 @@ export class IndexDbServiceService {
 
   getRecordByKey(storeName: string, key: any) {
     return this.dbService.getByKey(storeName, key)
+  }
+
+  deleteRecords(storeName: string, keys: Key[]) {
+
+    return this.dbService.bulkDelete(storeName, keys);
+
   }
 
 }

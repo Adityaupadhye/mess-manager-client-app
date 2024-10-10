@@ -28,6 +28,9 @@ export class AppComponent implements OnInit {
 
       if(loggedInUser.role == Role.ADMIN) {
         this._checkUsersSyncState(loggedInUser);
+        setInterval(() => {
+          this.syncService.syncLogEntries();
+        }, 30000);
       }
     }
     

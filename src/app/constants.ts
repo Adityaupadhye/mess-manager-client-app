@@ -9,10 +9,10 @@ export const LS_LOG_ENTRY_LAST_SYNC_TIME_KEY = 'last_sync_time_log_entry'
 
 
 export enum FoodCategory {
-    BREAKFAST = "Breakfast",
-    LUNCH = "Lunch",
-    SNACKS = "Snacks",
-    DINNER = "Dinner",
+    BREAKFAST = "breakfast",
+    LUNCH = "lunch",
+    SNACKS = "snacks",
+    DINNER = "dinner",
     NA = "NA"
 }
 

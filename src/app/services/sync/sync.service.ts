@@ -1,8 +1,10 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IndexDbServiceService } from '../localdb/index-db-service.service';
-import { API_BASE_URL, INDEXED_DB_USERS_STORE_NAME, LS_USERS_LAST_SYNC_TIME_KEY, Role } from '../../constants';
+import { API_BASE_URL, INDEXED_DB_LOG_ENTRY_STORE_NAME, INDEXED_DB_USERS_STORE_NAME, LS_USERS_LAST_SYNC_TIME_KEY, Role } from '../../constants';
 import { User } from '../../data/user';
+import { LogEntry } from '../../data/log-entry';
+import { Key } from 'ngx-indexed-db';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +41,71 @@ export class SyncService {
           // this.idbService.addRecord(INDEXED_DB_USERS_STORE_NAME, { 'name': 'Aditya', 'role': 1, 'hostel': 'H17', 'roll_no': '24MXXXX' });
         }
       })
+  }
+
+  syncLogEntries() {
+    console.log('syncing log entries');
+
+    this.idbService.getRecords(INDEXED_DB_LOG_ENTRY_STORE_NAME)
+    .subscribe({
+      next: (value: any) => {
+        let logEntryCount = value.length;
+        console.log(`found ${logEntryCount} entries in indexed db`);
+
+        if(logEntryCount == 0) {
+          console.log('no log entry found skipping server sync');
+          return;
+        }
+
+        this._serverSyncLogEntries(value);
+      },
+      error: (err: any) => {
+        console.error('error reading indexeddb log entry: ', err);
+      }
+    });
+
+  }
+
+  private _serverSyncLogEntries(entries: LogEntry[]) {
+
+    let data = {
+      'foodlogs': entries
+    };
+    console.log('post log entry API call start');
+    
+
+    this.http.post(API_BASE_URL+'post/', data)
+    .subscribe({
+      next: (response: any) => {
+        console.log('posted data response: ', response);
+        
+        // delete log entries
+        this._deleteSyncedLogEntries(entries);
+      },
+      error: (err: any) => {
+        console.error('error in posting API: ', err);
+      }
+    })
+  }
+
+  private _deleteSyncedLogEntries(syncedEntries: LogEntry[]) {
+
+    // create array of IDBKeys (timestamp)
+    let timestamp_keys: Key[] = [];
+    for(const syncedEntry of syncedEntries) {
+      timestamp_keys.push(syncedEntry.timestamp);
+    }
+
+
+    this.idbService.deleteRecords(INDEXED_DB_LOG_ENTRY_STORE_NAME, timestamp_keys)
+    .subscribe({
+      next: (value: number[]) => {
+        console.log('after delete: ', value);
+      },
+      error: (err: any) => {
+        console.error('log entry bulk delete error: ', err);
+      }
+    })
   }
 
 
