@@ -48,6 +48,7 @@ These visualizations are generated as PNG images and sent to the frontend for us
 3. **Data Analysis**:
    - Using collected data, admins can request analysis results, which are returned in the form of graphs or charts. These analyses help in optimizing food resources and understanding food consumption patterns.
 
+---
 
 ## Development server
 
