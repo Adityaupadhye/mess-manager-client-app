@@ -12,7 +12,7 @@ mat-grid-tile {
 .line-chart {
   width: 100% !important; /* Full width of the card */
   max-width: 800px; /* Set a maximum width */
-  height: 400px; /* Maintain aspect ratio */
+  height: auto; /* Maintain aspect ratio */
 }
 .bar-chart {
   width: 100% !important; /* Full width of the card */
