@@ -1,0 +1,141 @@
+<div>
+  <div class="mt-5 row justify-content-center">
+    <div class="col-2"></div>
+    <div class="col-4">
+      <div class="card p-3">
+        <canvas
+          class="pie-chart"
+          baseChart
+          [type]="'pie'"
+          [labels]="pieChartLabels"
+          [datasets]="pieChartDatasets"
+          [options]="pieChartOptions"
+          [plugins]="pieChartPlugins"
+          [legend]="pieChartLegend"
+          style="margin: 0 auto"
+        >
+        </canvas>
+        <div class="text-center mt-3">
+          <p><b>Student attendance across different meal categories</b></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="card p-3">
+        <canvas
+          class="pie-chart"
+          baseChart
+          [labels]="doughnutChartLabels"
+          [datasets]="doughnutChartDatasets"
+          [options]="doughnutChartOptions"
+          [legend]="true"
+          [type]="'doughnut'"
+          style="display: block; margin: 0 auto"
+        >
+        </canvas>
+        <div class="text-center mt-3">
+          <p><b>Food Wastage across different meal categories</b></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+  <div class="mt-5 row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="card p-3">
+        <canvas
+          class="bar-chart"
+          baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          [plugins]="barChartPlugins"
+          [legend]="barChartLegend"
+          [type]="'bar'"
+          style="display: block; margin: 0 auto"
+        >
+        </canvas>
+        <div class="text-center mt-3">
+          <p>
+            <b style="color: black"
+              >Student attendance across different meal categories (Weekly)</b
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+  <div class="mt-5 row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="card p-3">
+        <canvas baseChart
+                class="line-chart"
+                [type]="'line'"
+                [data]="lineChartData"
+                [options]="lineChartOptions"
+                [legend]="lineChartLegend"
+                style="display: block; margin: 0 auto">
+      </canvas>
+        <div class="text-center mt-3">
+          <p>
+            <b style="color: black"
+              >Food Wastage across different meal categories (Weekly)</b
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+  <div class="mt-5 row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="card p-3">
+        <canvas
+    class="bar-chart"
+    baseChart
+    [data]="secondBarChartData"
+    [options]="secondBarChartOptions"
+    [type]="'bar'"
+    style="display: block; margin: 0 auto"
+  ></canvas>
+        <div class="text-center mt-3">
+          <p>
+            <b style="color: black"
+              >Mean Student attendance across different meal categories (Monthly) </b
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+  <div class="mt-5 row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="card p-3">
+        <canvas
+    class="bar-chart"
+    baseChart
+    class="line-chart"
+                [type]="'line'"
+                [data]="secondLineChartData"
+                [options]="secondLineChartOptions"
+                [legend]="secondlineChartLegend"
+                style="display: block; margin: 0 auto">
+              </canvas>
+        <div class="text-center mt-3">
+          <p>
+            <b style="color: black"
+              >Mean Food Wastage across different meal categories (Monthly) </b
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+
+</div>

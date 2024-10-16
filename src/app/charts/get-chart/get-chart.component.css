@@ -1,0 +1,44 @@
+mat-grid-tile {
+    background: lightblue;
+  }
+
+  /* For Pie Chart */
+.pie-chart {
+  width: 90% !important;  /* Increase width */
+  height: 90% !important; /* Adjust height as needed */
+}
+
+/* For Bar Chart */
+.line-chart {
+  width: 100% !important; /* Full width of the card */
+  max-width: 800px; /* Set a maximum width */
+  height: 400px; /* Maintain aspect ratio */
+}
+.bar-chart {
+  width: 100% !important; /* Full width of the card */
+  max-width: 800px; /* Set a maximum width */
+  height: auto; /* Maintain aspect ratio */
+}
+
+
+@media (max-width: 768px) {
+  /* Adjustments for smaller screens */
+  .card {
+    padding: 1.5rem;
+  }
+
+  .text-center p {
+    font-size: 0.9rem; /* Adjust text size */
+  }
+}
+
+@media (max-width: 576px) {
+  /* Adjustments for extra small screens */
+  .text-center p {
+    font-size: 0.8rem; /* Further reduce text size */
+  }
+
+  .card {
+    padding: 1rem;
+  }
+}

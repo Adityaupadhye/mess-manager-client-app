@@ -3,6 +3,7 @@ import { StudentHomeComponent } from './student/student-home/student-home.compon
 import { LoginComponent } from './Auth/login/login.component';
 import { ScannerComponent } from './admin/scanner/scanner.component';
 import { NgModule } from '@angular/core';
+import { GetChartComponent } from './charts/get-chart/get-chart.component';
 
 export const routes: Routes = [
     {
@@ -30,6 +31,10 @@ export const routes: Routes = [
     {
         path: 'auth/login',
         component: LoginComponent
+    },
+    {
+        path: 'chart',
+        component : GetChartComponent
     }
 ];
 

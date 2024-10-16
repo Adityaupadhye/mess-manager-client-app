@@ -12,6 +12,8 @@ import { AppRoutingModule } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
+
 
 @NgModule({
   declarations: [
@@ -29,10 +31,13 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     FormsModule,
     SharedMaterialComponentsModule,
     DbModuleModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    
+    
   ],
   providers: [
     provideHttpClient(),
+    provideCharts(withDefaultRegisterables()), 
   ],    // Your services
   bootstrap: [AppComponent]  // Main component to bootstrap
 })
