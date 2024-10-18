@@ -1,20 +1,96 @@
-import { Component } from '@angular/core';
-import { SharedMaterialComponentsModule } from '../../shared-material-components/shared-material-components.module';
-import { BaseChartDirective } from 'ng2-charts';
+import { Component, OnInit } from '@angular/core';
 import { ChartOptions, ChartConfiguration } from 'chart.js';
+import { HttpClient } from '@angular/common/http';
+import { API_BASE_URL } from '../../constants';
 
 @Component({
   selector: 'app-get-chart',
-  standalone: true,
-  imports: [SharedMaterialComponentsModule, BaseChartDirective],
+  standalone: false,
+  // imports: [SharedMaterialComponentsModule, BaseChartDirective, AppModule],
   templateUrl: './get-chart.component.html',
   styleUrls: ['./get-chart.component.css']
 })
-export class GetChartComponent {
+export class GetChartComponent implements OnInit{
+ public weeklyData: any; 
+ public dates: any;
+ public dayOfWeekArray: any;
 
-  constructor() { }
+
+  constructor(private http: HttpClient,) { }
+  ngOnInit(): void {
+    // throw new Error('Method not implemented.');
+
+    this.getWeeklyData();
+    
+  }
+
+  //=============================Convert Date to Day -------------------------
+  
+  
+
+  getWeeklyData(){
+    this.http.get(API_BASE_URL+'weekly/',{
+      observe: 'response'
+    }).subscribe({
+
+    next: (response: any) => {
+      this.weeklyData = response.body.result;
+      
+      //get all dates
+      const dates = Object.keys(this.weeklyData);
+      const mealTypes: Array<'breakfast'|'lunch'|'snacks'|'dinner'> = ['breakfast', 'lunch', 'snacks', 'dinner'];
 
 
+      //Initialize with zero
+      const datasets: { [key in 'breakfast' | 'lunch' | 'snacks' | 'dinner']: number[] } = {
+        breakfast: new Array(dates.length).fill(0),
+        lunch    : new Array(dates.length).fill(0),
+        snacks   : new Array(dates.length).fill(0),
+        dinner   : new Array(dates.length).fill(0)
+      };
+      
+      const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const dayOfWeekArray: string[] = dates.map(dateStr => {
+        const date = new Date(dateStr);
+        return daysOfWeek[date.getDay()]; // Convert date to day of the week
+      });
+
+      console.log('Days of the Week:', dayOfWeekArray);
+
+      //Input values i.e. Populate
+      dates.forEach((date, index) => {
+        mealTypes.forEach(meal => {
+          if(this.weeklyData[date][meal] !== undefined) {
+            datasets[meal][index] = this.weeklyData[date][meal];
+          }
+        });
+      });
+
+       // Update the chart data
+       this.barChartData = {
+        labels: dayOfWeekArray, //dates, // Dates from the API
+        datasets: [
+          {
+            data: datasets.breakfast, label: 'Breakfast', backgroundColor: '#002F5D'
+          },
+          {
+            data: datasets.lunch, label: 'Lunch', backgroundColor: '#8BC1F7'
+          },
+          {
+            data: datasets.snacks, label: 'Snacks', backgroundColor: '#4CB140'
+          },
+          {
+            data: datasets.dinner, label: 'Dinner', backgroundColor: '#5752D1'
+          }
+        ]
+      };
+      
+    },
+    error: (error: any) => {
+      console.error('Error occurred:', error);
+    }
+  });
+}
 
   // =================================================== PIE ===========================================================
   public pieChartOptions: ChartOptions<'pie'> = {
@@ -99,34 +175,11 @@ export class GetChartComponent {
   public barChartLegend = true;
   public barChartPlugins = [];
 
+  
+
   public barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    datasets: [
-      {
-        data: [34, 55, 67, 23, 45, 78, 90], label: 'Breakfast', backgroundColor: [
-          '#002F5D',
-        ]
-      },
-      {
-        data: [20, 50, 30, 40, 70, 80, 90], label: 'Lunch', backgroundColor: [
-
-          '#8BC1F7',
-
-        ]
-      },
-      {
-        data: [15, 35, 25, 55, 65, 45, 35], label: 'Snacks', backgroundColor: [
-
-          '#4CB140',
-
-        ]
-      },
-      {
-        data: [40, 30, 60, 50, 20, 10, 70], label: 'Dinner', backgroundColor: [
-          '#5752D1',
-        ]
-      }
-    ]
+    labels: [],
+    datasets: []
   };
 
   public barChartOptions: ChartConfiguration<'bar'>['options'] = {

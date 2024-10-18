@@ -4,12 +4,13 @@ import { LoginComponent } from './Auth/login/login.component';
 import { ScannerComponent } from './admin/scanner/scanner.component';
 import { NgModule } from '@angular/core';
 import { GetChartComponent } from './charts/get-chart/get-chart.component';
+// import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'auth/login',
+        redirectTo: 'auth/login', //Default route
     },
     {
         path: 'admin/scan',
@@ -17,24 +18,17 @@ export const routes: Routes = [
     },
     {
         path: 'student/home',
-        component: StudentHomeComponent
+        component: StudentHomeComponent,
+        // canActivate: [authGuard]
     },
     {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'admin/scan',
-    },
-    {
-        path: 'admin/scan',
-        component: ScannerComponent
-    },
-    {
-        path: 'auth/login',
+        path: 'auth/login', // Public Route
         component: LoginComponent
     },
     {
-        path: 'chart',
-        component : GetChartComponent
+        path: 'admin/chart',  // Protected route
+        component : GetChartComponent,
+        // canActivate: [authGuard]
     }
 ];
 

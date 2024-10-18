@@ -12,16 +12,20 @@ import { AppRoutingModule } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts'
+import { NavbarComponent } from "./common/navbar/navbar.component";
+import { GetChartComponent } from './charts/get-chart/get-chart.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ScannerComponent
+    ScannerComponent,
+    NavbarComponent,
+    GetChartComponent
   ],
   imports: [
-    BrowserModule,  // Import Angular modules here
+    BrowserModule, // Import Angular modules here
     // Other modules if needed
     RouterModule,
     BrowserAnimationsModule,
@@ -32,9 +36,9 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts'
     SharedMaterialComponentsModule,
     DbModuleModule,
     NgxSpinnerModule,
-    
-    
-  ],
+    BaseChartDirective
+    // NavbarComponent
+],
   providers: [
     provideHttpClient(),
     provideCharts(withDefaultRegisterables()), 

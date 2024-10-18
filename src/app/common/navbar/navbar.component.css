@@ -1,0 +1,20 @@
+.logo {
+  /* font-family: "Pacifico", cursive; Ensure you have imported the Pacifico font */
+  font-weight: bold;
+  font-size: 3rem; /* Adjust size as needed */
+  color: #11001f; /* You can choose any color you like */
+  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
+ /* Adds some margin around the logo */
+}
+
+.nav-item .nav-link {
+  
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.navbar {
+    padding-top: 5px; /* Reduce the top padding */
+    padding-bottom: 10px; /* Reduce the bottom padding */
+    height: fit-content ;/* Set a specific height, adjust as needed */
+}
