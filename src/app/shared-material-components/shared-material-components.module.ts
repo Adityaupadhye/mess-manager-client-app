@@ -6,9 +6,10 @@ import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import {MatGridListModule} from '@angular/material/grid-list';
-
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
 
 
 @NgModule({
@@ -27,6 +28,9 @@ import {MatGridListModule} from '@angular/material/grid-list';
     MatButtonModule, 
     MatIconModule,
     MatGridListModule,
+    MatDatepickerModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
     MatSnackBar

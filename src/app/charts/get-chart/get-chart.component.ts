@@ -50,12 +50,15 @@ export class GetChartComponent implements OnInit{
       };
       
       const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      const dayOfWeekArray: string[] = dates.map(dateStr => {
-        const date = new Date(dateStr);
-        return daysOfWeek[date.getDay()]; // Convert date to day of the week
-      });
 
-      console.log('Days of the Week:', dayOfWeekArray);
+      const date_day = dates.map(dateStr => {
+        const date = new Date(dateStr);
+        const dayOfWeek = daysOfWeek[date.getDay()];
+        return [dateStr, dayOfWeek]; // Array of two strings for each label (multi-line)
+      });     
+      
+
+      
 
       //Input values i.e. Populate
       dates.forEach((date, index) => {
@@ -68,7 +71,7 @@ export class GetChartComponent implements OnInit{
 
        // Update the chart data
        this.barChartData = {
-        labels: dayOfWeekArray, //dates, // Dates from the API
+        labels: date_day,//dates, //dayOfWeekArray, // Dates from the API
         datasets: [
           {
             data: datasets.breakfast, label: 'Breakfast', backgroundColor: '#002F5D'

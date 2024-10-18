@@ -51,3 +51,10 @@ body::-webkit-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+.daily-data {
+  
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
