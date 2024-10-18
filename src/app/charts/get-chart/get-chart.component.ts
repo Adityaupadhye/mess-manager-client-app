@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartOptions, ChartConfiguration } from 'chart.js';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_BASE_URL } from '../../constants';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-get-chart',
@@ -14,15 +15,75 @@ export class GetChartComponent implements OnInit{
  public weeklyData: any; 
  public dates: any;
  public dayOfWeekArray: any;
+ public checkData: any;
 
-
-  constructor(private http: HttpClient,) { }
+  constructor(private http: HttpClient,private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
-    // throw new Error('Method not implemented.');
+    this.getWeeklyData(); // Call your existing method (if applicable)
+    const dateToSend = this.getYesterdayDate();  // Get yesterday's date
+    this.getDataWithDate(dateToSend); 
+    console.log(dateToSend); // Send yesterday's date
+}
 
-    this.getWeeklyData();
-    
-  }
+//============================Get Yesterday's Date============================
+getYesterdayDate(): Date {
+    const today = new Date();  // Get today's date
+    const yesterday = new Date(today);  // Create a copy of today's date
+    yesterday.setDate(today.getDate() - 4);  // Subtract one day
+    return yesterday;  // Return yesterday's date
+}
+
+//============================Send Date ==================================
+getDataWithDate(date: Date) {
+    // Format the date to DD-MM-YYYY
+    const formattedDate = this.formatDate(date);
+
+    // Create HttpParams object and set the formatted date as a query parameter
+    let params = new HttpParams().set('date', formattedDate);
+
+    // Make GET request with query parameters
+    this.http.get(API_BASE_URL + 'pie/',{ 
+      params, 
+      observe: 'response'
+    }).subscribe({
+      next: (response: any) => {
+        console.log('API Response:', response); // Log the entire response
+       // Check if the response has a body and the expected data structure
+        if (response.body && response.body.result) {
+          this.checkData = response.body.result;  // Assign the result to checkData
+          console.log('Data received:', this.checkData);  // Log the received data
+          console.table(this.checkData);
+          // Update pieChartDatasets based on the received data
+          this.pieChartDatasets[0].data = [
+            this.checkData.breakfast,
+            this.checkData.lunch,
+            this.checkData.snacks,
+            this.checkData.dinner
+          ];
+          console.log('Updated pieChartDatasets:', this.pieChartDatasets); // Log the datasets
+        this.cdr.detectChanges();
+        } else {
+          console.error('Unexpected response structure:', response.body);
+        }
+      },
+      error: (error: any) => {
+        console.error('Error occurred:', error);
+      }
+      });
+}
+
+// Helper method to format date to DD-MM-YYYY
+formatDate(date: Date): string {
+    const day = ('0' + date.getDate()).slice(-2); // Pad single digits with zero
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`; // Return formatted date
+}
+
+
+  
+  
+  //============================SEND DATE END =============================
 
   //=============================Convert Date to Day -------------------------
   
@@ -95,6 +156,8 @@ export class GetChartComponent implements OnInit{
   });
 }
 
+
+
   // =================================================== PIE ===========================================================
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
@@ -120,7 +183,7 @@ export class GetChartComponent implements OnInit{
   public pieChartLabels: string[] = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
   public pieChartDatasets = [
     {
-      data: [35, 25, 25, 15],
+      data: [0, 0, 0, 0],
       backgroundColor: [
         '#007bff', // Vibrant Blue
         '#ffc107', // Bright Amber
