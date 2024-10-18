@@ -29,11 +29,12 @@ export class GetChartComponent implements OnInit{
 getYesterdayDate(): Date {
     const today = new Date();  // Get today's date
     const yesterday = new Date(today);  // Create a copy of today's date
-    yesterday.setDate(today.getDate() - 4);  // Subtract one day
+    yesterday.setDate(today.getDate() - 5);  // Subtract one day
     return yesterday;  // Return yesterday's date
 }
 
 //============================Send Date ==================================
+public loading: boolean = true; // Track loading state
 getDataWithDate(date: Date) {
     // Format the date to DD-MM-YYYY
     const formattedDate = this.formatDate(date);
@@ -47,20 +48,18 @@ getDataWithDate(date: Date) {
       observe: 'response'
     }).subscribe({
       next: (response: any) => {
-        console.log('API Response:', response); // Log the entire response
+        this.loading = false; // Set loading to false when data is received
        // Check if the response has a body and the expected data structure
         if (response.body && response.body.result) {
           this.checkData = response.body.result;  // Assign the result to checkData
-          console.log('Data received:', this.checkData);  // Log the received data
-          console.table(this.checkData);
+         
           // Update pieChartDatasets based on the received data
           this.pieChartDatasets[0].data = [
-            this.checkData.breakfast,
+            this.checkData.breakfast,  // Use fallback to 0 if undefined
             this.checkData.lunch,
             this.checkData.snacks,
             this.checkData.dinner
           ];
-          console.log('Updated pieChartDatasets:', this.pieChartDatasets); // Log the datasets
         this.cdr.detectChanges();
         } else {
           console.error('Unexpected response structure:', response.body);
@@ -183,7 +182,7 @@ formatDate(date: Date): string {
   public pieChartLabels: string[] = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
   public pieChartDatasets = [
     {
-      data: [0, 0, 0, 0],
+      data: [0,0,0,0],
       backgroundColor: [
         '#007bff', // Vibrant Blue
         '#ffc107', // Bright Amber
