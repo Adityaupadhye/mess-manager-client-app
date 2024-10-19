@@ -160,6 +160,7 @@ formatDate(date: Date): string {
   // =================================================== PIE ===========================================================
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
+    // maintainAspectRatio: true,
     plugins: {
       legend: {
         labels: {
@@ -216,7 +217,8 @@ formatDate(date: Date): string {
   ];
 
   public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: false,
+    responsive: true,
+    // maintainAspectRatio: true,
     plugins: {
       legend: {
         labels: {
@@ -248,7 +250,8 @@ formatDate(date: Date): string {
   };
 
   public barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: false,
+    responsive: true,
+    // maintainAspectRatio: true,
     plugins: {
       legend: {
         labels: {
@@ -344,7 +347,8 @@ formatDate(date: Date): string {
   
   
   public lineChartOptions: ChartOptions<'line'> = {
-    responsive: false,
+    responsive: true,
+    // maintainAspectRatio: true,
     plugins: {
       legend: {
         labels: {
@@ -413,6 +417,7 @@ public secondBarChartData: ChartConfiguration<'bar'>['data'] = {
 // Second Bar Chart Options
 public secondBarChartOptions: ChartConfiguration<'bar'>['options'] = {
   responsive: true,
+    maintainAspectRatio: true,
   plugins: {
     legend: {
       labels: {
@@ -502,6 +507,7 @@ public secondLineChartData: ChartConfiguration<'line'>['data'] = {
 // Line Chart Options (with "Dates" label)
 public secondLineChartOptions: ChartOptions<'line'> = {
   responsive: true,
+    // maintainAspectRatio: true,
   plugins: {
     legend: {
       labels: {

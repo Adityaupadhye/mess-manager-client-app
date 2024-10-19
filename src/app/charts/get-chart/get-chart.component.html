@@ -3,7 +3,7 @@
   <div class="mt-5 row justify-content-center">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-      <div class="row justify-content-between align-items-cente">
+      <div class="row justify-content-between align-items-center">
         <div class="col-md-3">
           <p class="daily-data text-white">Daily Data</p>
         </div>
@@ -16,7 +16,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
           <div class="card p-3">
             <div *ngIf="loading">Loading...</div>
               <canvas *ngIf="!loading && checkData" baseChart
@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 mt-3">
           <div class="card p-3">
             <canvas
               class="pie-chart"
@@ -88,10 +88,10 @@
     <div class="col-md-2"></div>
   </div>
 
-  <div *ngIf="checkData" class="text-white">
+  <!-- <div *ngIf="checkData" class="text-white">
     <h2>Weekly Data</h2>
     <pre>{{ checkData| json }}</pre>
-  </div>
+  </div> -->
 
   <div class="mt-5 row">
     <div class="col-md-2"></div>

@@ -16,10 +16,10 @@
     <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item m-4">
-          <a class="nav-link active font-weight-bold" aria-current="page" routerLink="/admin/scan">Home</a>
+          <a [ngClass]="{'active': this.router.url.includes('scan')}" class="nav-link font-weight-bold" aria-current="page" routerLink="/admin/scan">Home</a>
         </li>
         <li class="nav-item m-4">
-          <a class="nav-link font-weight-bold" routerLink="/admin/chart">Chart</a>
+          <a [ngClass]="{'active': this.router.url.includes('chart')}" class="nav-link font-weight-bold" routerLink="/admin/chart">Chart</a>
         </li>
         <li class="nav-item m-4">
           <button

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { LoginService } from '../../services/auth/login.service';
 import { SharedMaterialComponentsModule } from '../../shared-material-components/shared-material-components.module';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +13,7 @@ import { RouterModule } from '@angular/router';
 export class NavbarComponent {
   constructor(
     public loginService: LoginService,
+    public router: Router
   ) {
 
   }
