@@ -1,25 +1,30 @@
 mat-grid-tile {
-    background: lightblue;
-  }
+  background: lightblue;
+}
 
-  /* For Pie Chart */
+/* For Pie Chart */
 .pie-chart {
-  width: 90% !important;  /* Increase width */
-  height: 90% !important; /* Adjust height as needed */
+  width: 90% !important;
+  height: 90% !important;
+}
+
+/* Doughnut Chartt */
+.doughnut-chart {
+  width: 90% !important;
+  height: 90% !important;
 }
 
 /* For Bar Chart */
 .line-chart {
-  width: 100% !important; /* Full width of the card */
-  max-width: 800px; /* Set a maximum width */
-  height: auto; /* Maintain aspect ratio */
+  width: 100% !important;
+  max-width: 800px;
+  height: auto;
 }
 .bar-chart {
-  width: 100% !important; /* Full width of the card */
-  max-width: 800px; /* Set a maximum width */
-  height: auto; /* Maintain aspect ratio */
+  width: 100% !important;
+  max-width: 800px;
+  height: auto;
 }
-
 
 @media (max-width: 768px) {
   /* Adjustments for smaller screens */
@@ -28,14 +33,14 @@ mat-grid-tile {
   }
 
   .text-center p {
-    font-size: 0.9rem; /* Adjust text size */
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 576px) {
   /* Adjustments for extra small screens */
   .text-center p {
-    font-size: 0.8rem; /* Further reduce text size */
+    font-size: 0.8rem;
   }
 
   .card {
@@ -48,12 +53,11 @@ body::-webkit-scrollbar {
 }
 
 .container-fluid {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .daily-data {
-  
   font-weight: 800;
   font-size: 1.5rem;
 }

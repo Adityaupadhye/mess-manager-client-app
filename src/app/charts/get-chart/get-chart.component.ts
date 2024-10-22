@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartOptions, ChartConfiguration } from 'chart.js';
+import { ChartOptions, ChartConfiguration ,Chart, Plugin, TooltipItem } from 'chart.js';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_BASE_URL } from '../../constants';
 import { ChangeDetectorRef } from '@angular/core';
@@ -11,56 +11,134 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './get-chart.component.html',
   styleUrls: ['./get-chart.component.css']
 })
-export class GetChartComponent implements OnInit{
- public weeklyData: any; 
- public dates: any;
- public dayOfWeekArray: any;
- public checkData: any;
+export class GetChartComponent implements OnInit {
+  public weeklyData: any;
+  public dates: any;
+  public dayOfWeekArray: any;
+  public checkPieAttendenceData: any;
+  public checkPieWastageData: any;
+  public loadingForPieAttendence: boolean = true;
+  public loadingForPieWastage: boolean = true;
+  public test: any;
 
-  constructor(private http: HttpClient,private cdr: ChangeDetectorRef) { }
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
     this.getWeeklyData(); // Call your existing method (if applicable)
     const dateToSend = this.getYesterdayDate();  // Get yesterday's date
-    this.getDataWithDate(dateToSend); 
+    this.getDataWithDate(dateToSend);
     console.log(dateToSend); // Send yesterday's date
-}
+    this.getYesterdayWastageData(dateToSend);
 
-//============================Get Yesterday's Date============================
-getYesterdayDate(): Date {
+    
+  }
+
+
+  //=========================== Food Watage last day (doughnut) ==========================
+
+  getYesterdayWastageData(date: Date) {
+    // Format the date to YYYY-MM-DD
+    const formattedDateWastage = this.formateDateWaste(date);
+
+    let params = new HttpParams().set('date', formattedDateWastage);
+
+    // API CALL
+    this.http.get(API_BASE_URL + 'menu/foodmenu/search_by_date/', {
+      params,
+      observe: 'response'
+    }).subscribe({
+      next: (response: any) => {
+        this.loadingForPieWastage = false;
+        if (response.body && response.body.data) {
+          const checkPieWastageData = response.body.data; //Assigning the results
+          //Preapre labels
+          const labels: string[] = [];
+          const datasetWithMenuAndWastage: {food_wastage: number, menu: string[]}[] = [];
+          checkPieWastageData.forEach((item: any) => {
+            //Extract food_category as labels
+              labels.push(item.food_category);
+            //Extreact food wastage and menu
+            datasetWithMenuAndWastage.push({
+              food_wastage: item.food_wastage,
+              menu: [item.menu],
+            });
+          });
+          this.doughnutChartData = {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Food Wastage',
+                data: datasetWithMenuAndWastage.map(d => d.food_wastage),
+                backgroundColor: this.generateBackgroundColor(labels.length),
+                menu: datasetWithMenuAndWastage.map(d => d.menu),
+              }
+            ]
+          };
+
+          this.cdr.detectChanges();
+        }
+      },
+      error: (error: any) => {
+        console.error('Error occurred:', error);
+        this.loadingForPieWastage = false;
+      }
+
+    });
+  }
+
+  // Function to caps
+  //  capitalize(s: string): string {
+  //   return s.charAt(0).toUpperCase() + s.slice(1);
+  // }
+
+  //generatw colors
+  generateBackgroundColor(count: number): string[] {
+    const colors = ['#002F5D', '#8BC1F7', '#4CB140', '#5752D1'];
+    return colors.slice(0, count); // Use only the required number of colors
+  }
+
+  // Helper method to format date to YYYY-MM-DD
+  formateDateWaste(date: Date): string {
+    const day = ('0' + date.getDate()).slice(-2); // Pad single digits with zero
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`; // Return formatted date
+  }
+
+
+  //============================Get Yesterday's Date============================
+  getYesterdayDate(): Date {
     const today = new Date();  // Get today's date
     const yesterday = new Date(today);  // Create a copy of today's date
     yesterday.setDate(today.getDate() - 5);  // Subtract one day
     return yesterday;  // Return yesterday's date
-}
+  }
 
-//============================Send Date ==================================
-public loading: boolean = true; // Track loading state
-getDataWithDate(date: Date) {
+  //============================Send Date ==================================
+  getDataWithDate(date: Date) {
     // Format the date to DD-MM-YYYY
     const formattedDate = this.formatDate(date);
 
-    // Create HttpParams object and set the formatted date as a query parameter
+
     let params = new HttpParams().set('date', formattedDate);
 
     // Make GET request with query parameters
-    this.http.get(API_BASE_URL + 'pie/',{ 
-      params, 
+    this.http.get(API_BASE_URL + 'pie/', {
+      params,
       observe: 'response'
     }).subscribe({
       next: (response: any) => {
-        this.loading = false; // Set loading to false when data is received
-       // Check if the response has a body and the expected data structure
+        this.loadingForPieAttendence = false;
         if (response.body && response.body.result) {
-          this.checkData = response.body.result;  // Assign the result to checkData
-         
+          this.checkPieAttendenceData = response.body.result;  // Assign the result to checkPieAttendenceData
+
           // Update pieChartDatasets based on the received data
           this.pieChartDatasets[0].data = [
-            this.checkData.breakfast,  // Use fallback to 0 if undefined
-            this.checkData.lunch,
-            this.checkData.snacks,
-            this.checkData.dinner
+            this.checkPieAttendenceData.breakfast,
+            this.checkPieAttendenceData.lunch,
+            this.checkPieAttendenceData.snacks,
+            this.checkPieAttendenceData.dinner
           ];
-        this.cdr.detectChanges();
+          this.cdr.detectChanges();
         } else {
           console.error('Unexpected response structure:', response.body);
         }
@@ -68,92 +146,92 @@ getDataWithDate(date: Date) {
       error: (error: any) => {
         console.error('Error occurred:', error);
       }
-      });
-}
+    });
+  }
 
-// Helper method to format date to DD-MM-YYYY
-formatDate(date: Date): string {
+  // Helper method to format date to DD-MM-YYYY
+  formatDate(date: Date): string {
     const day = ('0' + date.getDate()).slice(-2); // Pad single digits with zero
     const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
     const year = date.getFullYear();
     return `${day}-${month}-${year}`; // Return formatted date
-}
+  }
 
 
-  
-  
+
+
   //============================SEND DATE END =============================
 
   //=============================Convert Date to Day -------------------------
-  
-  
 
-  getWeeklyData(){
-    this.http.get(API_BASE_URL+'weekly/',{
+
+
+  getWeeklyData() {
+    this.http.get(API_BASE_URL + 'weekly/', {
       observe: 'response'
     }).subscribe({
 
-    next: (response: any) => {
-      this.weeklyData = response.body.result;
-      
-      //get all dates
-      const dates = Object.keys(this.weeklyData);
-      const mealTypes: Array<'breakfast'|'lunch'|'snacks'|'dinner'> = ['breakfast', 'lunch', 'snacks', 'dinner'];
+      next: (response: any) => {
+        this.weeklyData = response.body.result;
+
+        //get all dates
+        const dates = Object.keys(this.weeklyData);
+        const mealTypes: Array<'breakfast' | 'lunch' | 'snacks' | 'dinner'> = ['breakfast', 'lunch', 'snacks', 'dinner'];
 
 
-      //Initialize with zero
-      const datasets: { [key in 'breakfast' | 'lunch' | 'snacks' | 'dinner']: number[] } = {
-        breakfast: new Array(dates.length).fill(0),
-        lunch    : new Array(dates.length).fill(0),
-        snacks   : new Array(dates.length).fill(0),
-        dinner   : new Array(dates.length).fill(0)
-      };
-      
-      const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        //Initialize with zero
+        const datasets: { [key in 'breakfast' | 'lunch' | 'snacks' | 'dinner']: number[] } = {
+          breakfast: new Array(dates.length).fill(0),
+          lunch: new Array(dates.length).fill(0),
+          snacks: new Array(dates.length).fill(0),
+          dinner: new Array(dates.length).fill(0)
+        };
 
-      const date_day = dates.map(dateStr => {
-        const date = new Date(dateStr);
-        const dayOfWeek = daysOfWeek[date.getDay()];
-        return [dateStr, dayOfWeek]; // Array of two strings for each label (multi-line)
-      });     
-      
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-      
-
-      //Input values i.e. Populate
-      dates.forEach((date, index) => {
-        mealTypes.forEach(meal => {
-          if(this.weeklyData[date][meal] !== undefined) {
-            datasets[meal][index] = this.weeklyData[date][meal];
-          }
+        const date_day = dates.map(dateStr => {
+          const date = new Date(dateStr);
+          const dayOfWeek = daysOfWeek[date.getDay()];
+          return [dateStr, dayOfWeek]; // Array of two strings for each label (multi-line)
         });
-      });
 
-       // Update the chart data
-       this.barChartData = {
-        labels: date_day,//dates, //dayOfWeekArray, // Dates from the API
-        datasets: [
-          {
-            data: datasets.breakfast, label: 'Breakfast', backgroundColor: '#002F5D'
-          },
-          {
-            data: datasets.lunch, label: 'Lunch', backgroundColor: '#8BC1F7'
-          },
-          {
-            data: datasets.snacks, label: 'Snacks', backgroundColor: '#4CB140'
-          },
-          {
-            data: datasets.dinner, label: 'Dinner', backgroundColor: '#5752D1'
-          }
-        ]
-      };
-      
-    },
-    error: (error: any) => {
-      console.error('Error occurred:', error);
-    }
-  });
-}
+
+
+
+        //Input values i.e. Populate
+        dates.forEach((date, index) => {
+          mealTypes.forEach(meal => {
+            if (this.weeklyData[date][meal] !== undefined) {
+              datasets[meal][index] = this.weeklyData[date][meal];
+            }
+          });
+        });
+
+        // Update the chart data
+        this.barChartData = {
+          labels: date_day,//dates, //dayOfWeekArray, // Dates from the API
+          datasets: [
+            {
+              data: datasets.breakfast, label: 'Breakfast', backgroundColor: '#002F5D'
+            },
+            {
+              data: datasets.lunch, label: 'Lunch', backgroundColor: '#8BC1F7'
+            },
+            {
+              data: datasets.snacks, label: 'Snacks', backgroundColor: '#4CB140'
+            },
+            {
+              data: datasets.dinner, label: 'Dinner', backgroundColor: '#5752D1'
+            }
+          ]
+        };
+
+      },
+      error: (error: any) => {
+        console.error('Error occurred:', error);
+      }
+    });
+  }
 
 
 
@@ -183,7 +261,7 @@ formatDate(date: Date): string {
   public pieChartLabels: string[] = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
   public pieChartDatasets = [
     {
-      data: [0,0,0,0],
+      data: [0, 0, 0, 0],
       backgroundColor: [
         '#007bff', // Vibrant Blue
         '#ffc107', // Bright Amber
@@ -203,46 +281,61 @@ formatDate(date: Date): string {
   public pieChartPlugins = [];
 
   // ==================================================== Doughnut ===========================================================
-  public doughnutChartLabels: string[] = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
-  public doughnutChartDatasets: ChartConfiguration<'doughnut'>['data']['datasets'] = [
-    {
-      data: [350, 450, 100, 50],
-      backgroundColor: [
-        '#002F5D',
-        '#8BC1F7',
-        '#4CB140',
-        '#5752D1',
-      ]
-    }
-  ];
+  public doughnutChartLegend = true;
+  public doughnutChartPlugins = [];
+  public doughnutChartData: any = null;
 
   public doughnutChartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
     // maintainAspectRatio: true,
     plugins: {
       legend: {
+        display: true,
+        position: 'top',
+        align: 'center',
         labels: {
           font: {
-            size: 19,
-          }
+            size: 19, 
+          },
+          padding: 10, 
+          boxWidth: 35,
         }
       },
       tooltip: {
+        enabled: true,
+        callbacks: {
+          // Customize the tooltip to display both the wastage and the menu
+          label: (tooltipItem: TooltipItem<'doughnut'>) => {
+            const dataset = tooltipItem.dataset; // Current dataset
+            const dataIndex = tooltipItem.dataIndex; // Index of current item in dataset
+  
+            // Retrieve the food_wastage value
+            const foodWastage = dataset.data[dataIndex] as number;
+  
+            // Retrieve the menu from your API response
+            const menu = this.doughnutChartData.datasets[0].menu[dataIndex]; // Access the menu for the corresponding data point
+  
+            // Format the tooltip label
+            return `Food Wastage: ${foodWastage} kg, Menu: ${menu.join(', ')}`;
+          }
+        },
         titleFont: {
           size: 16
         },
         bodyFont: {
           size: 14
         }
-      }
+      },
+      
     }
   };
+ 
 
   // ==================================================== Bar chart ===========================================================
   public barChartLegend = true;
   public barChartPlugins = [];
 
-  
+
 
   public barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
@@ -344,8 +437,8 @@ formatDate(date: Date): string {
       }
     ]
   };
-  
-  
+
+
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
     // maintainAspectRatio: true,
@@ -403,180 +496,180 @@ formatDate(date: Date): string {
   //============================================== Second Bar CHart ======================================
 
   // Second Bar Chart Data
-public secondBarChartData: ChartConfiguration<'bar'>['data'] = {
-  labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()), // Generate labels 1-31
-  datasets: [
-    {
-      data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100)), // Random data for mean attendance
-      label: 'Mean Attendance',
-      backgroundColor: '#FF6384', // Customize the color
-    }
-  ]
-};
+  public secondBarChartData: ChartConfiguration<'bar'>['data'] = {
+    labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()), // Generate labels 1-31
+    datasets: [
+      {
+        data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100)), // Random data for mean attendance
+        label: 'Mean Attendance',
+        backgroundColor: '#FF6384', // Customize the color
+      }
+    ]
+  };
 
-// Second Bar Chart Options
-public secondBarChartOptions: ChartConfiguration<'bar'>['options'] = {
-  responsive: true,
+  // Second Bar Chart Options
+  public secondBarChartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
     maintainAspectRatio: true,
-  plugins: {
-    legend: {
-      labels: {
-        font: {
-          size: 18, // Adjust label size
-          family: 'Arial',
-          weight: 'bold',
+    plugins: {
+      legend: {
+        labels: {
+          font: {
+            size: 18, // Adjust label size
+            family: 'Arial',
+            weight: 'bold',
+          }
         }
-      }
-    },
-    tooltip: {
-      titleFont: {
-        size: 16,
-        family: 'Arial',
-        weight: 'bold',
       },
-      bodyFont: {
-        size: 14,
-        family: 'Arial',
-        weight: 'normal',
-      }
-    }
-  },
-  scales: {
-    x: {
-      ticks: {
-        color: 'black',
-        font: {
+      tooltip: {
+        titleFont: {
           size: 16,
           family: 'Arial',
           weight: 'bold',
-        }
-      },
-      title: {
-        display: true,
-        text: 'Dates', // X-axis title
-        font: {
-          size: 18,
-          family: 'Arial',
-          weight: 'bold',
         },
-        color: 'black',
+        bodyFont: {
+          size: 14,
+          family: 'Arial',
+          weight: 'normal',
+        }
       }
     },
-    y: {
-      ticks: {
-        color: 'black',
-        font: {
-          size: 16,
-          family: 'Arial',
-          weight: 'bold',
+    scales: {
+      x: {
+        ticks: {
+          color: 'black',
+          font: {
+            size: 16,
+            family: 'Arial',
+            weight: 'bold',
+          }
+        },
+        title: {
+          display: true,
+          text: 'Dates', // X-axis title
+          font: {
+            size: 18,
+            family: 'Arial',
+            weight: 'bold',
+          },
+          color: 'black',
         }
       },
-      title: {
-        display: true,
-        text: 'Avg. No. of Students', // Y-axis title
-        font: {
-          size: 18,
-          family: 'Arial',
-          weight: 'bold',
+      y: {
+        ticks: {
+          color: 'black',
+          font: {
+            size: 16,
+            family: 'Arial',
+            weight: 'bold',
+          }
         },
-        color: 'black',
+        title: {
+          display: true,
+          text: 'Avg. No. of Students', // Y-axis title
+          font: {
+            size: 18,
+            family: 'Arial',
+            weight: 'bold',
+          },
+          color: 'black',
+        }
       }
     }
-  }
-};
+  };
 
-//==========================================Second Line CHart ======================================
+  //==========================================Second Line CHart ======================================
 
-// Line Chart Data (with Dates on X-axis)
-public secondLineChartData: ChartConfiguration<'line'>['data'] = {
-  labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()), // Empty labels for X-axis (1-31 dates)
-  datasets: [
-    {
-      data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100)), // Random data for avg food wastage
-      label: 'Mean Wastage',
-      tension: 0.5,
-      borderColor: 'green',
-      backgroundColor: 'transparent',
-      fill: false
-    }
-    
-   
-  ]
-};
+  // Line Chart Data (with Dates on X-axis)
+  public secondLineChartData: ChartConfiguration<'line'>['data'] = {
+    labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()), // Empty labels for X-axis (1-31 dates)
+    datasets: [
+      {
+        data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100)), // Random data for avg food wastage
+        label: 'Mean Wastage',
+        tension: 0.5,
+        borderColor: 'green',
+        backgroundColor: 'transparent',
+        fill: false
+      }
 
-// Line Chart Options (with "Dates" label)
-public secondLineChartOptions: ChartOptions<'line'> = {
-  responsive: true,
+
+    ]
+  };
+
+  // Line Chart Options (with "Dates" label)
+  public secondLineChartOptions: ChartOptions<'line'> = {
+    responsive: true,
     // maintainAspectRatio: true,
-  plugins: {
-    legend: {
-      labels: {
-        font: {
-          size: 19,
-          family: 'Arial',
-          weight: 'bold',
+    plugins: {
+      legend: {
+        labels: {
+          font: {
+            size: 19,
+            family: 'Arial',
+            weight: 'bold',
+          }
         }
-      }
-    },
-    tooltip: {
-      titleFont: {
-        size: 16,
-        family: 'Arial',
-        weight: 'bold',
       },
-      bodyFont: {
-        size: 14,
-        family: 'Arial',
-        weight: 'normal',
-      }
-    }
-  },
-  scales: {
-    x: {
-      ticks: {
-        color: 'black',
-        font: {
+      tooltip: {
+        titleFont: {
           size: 16,
           family: 'Arial',
           weight: 'bold',
         },
-        
-      },
-      title: {
-        display: true,
-        text: 'Dates', // X-axis title
-        font: {
-          size: 18,
+        bodyFont: {
+          size: 14,
           family: 'Arial',
-          weight: 'bold',
-        },
-        color: 'black',
+          weight: 'normal',
+        }
       }
     },
-    y: {
-      ticks: {
-        color: 'black',
-        font: {
-          size: 16,
-          family: 'Arial',
-          weight: 'bold',
-        }
-      },
-      title: {
-        display: true,
-        text: 'Avg Food Wastage (in Kgs)', // Y-axis title
-        font: {
-          size: 18,
-          family: 'Arial',
-          weight: 'bold',
-        },
-        color: 'black',
-      }
-    }
-  }
-};
+    scales: {
+      x: {
+        ticks: {
+          color: 'black',
+          font: {
+            size: 16,
+            family: 'Arial',
+            weight: 'bold',
+          },
 
-public secondlineChartLegend = true;
+        },
+        title: {
+          display: true,
+          text: 'Dates', // X-axis title
+          font: {
+            size: 18,
+            family: 'Arial',
+            weight: 'bold',
+          },
+          color: 'black',
+        }
+      },
+      y: {
+        ticks: {
+          color: 'black',
+          font: {
+            size: 16,
+            family: 'Arial',
+            weight: 'bold',
+          }
+        },
+        title: {
+          display: true,
+          text: 'Avg Food Wastage (in Kgs)', // Y-axis title
+          font: {
+            size: 18,
+            family: 'Arial',
+            weight: 'bold',
+          },
+          color: 'black',
+        }
+      }
+    }
+  };
+
+  public secondlineChartLegend = true;
 
 
 }
