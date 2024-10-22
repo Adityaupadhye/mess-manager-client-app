@@ -1,0 +1,68 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<nav class="navbar navbar-expand-lg" style="background-color: #faf27d">
+  <div class="container-fluid">
+    <h4 class="logo">SmartMeal</h4>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarTogglerDemo02"
+      aria-controls="navbarTogglerDemo02"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item m-4">
+          <a [ngClass]="{'active': this.router.url.includes('scan')}" class="nav-link font-weight-bold" aria-current="page" routerLink="/admin/scan">Home</a>
+        </li>
+        <li class="nav-item m-4">
+          <a [ngClass]="{'active': this.router.url.includes('chart')}" class="nav-link font-weight-bold" routerLink="/admin/chart">Chart</a>
+        </li>
+        <li class="nav-item m-4">
+          <button
+            type="button"
+            class="btn btn-lg btn-outline-dark font-weight-bold"
+            style="font-weight: 800;"
+            data-bs-toggle="modal" data-bs-target="#exampleModal"
+            (click)="addMenu()"
+            [disabled]="!this.router.url.includes('scan')"
+          >
+            Add Menu
+          </button>
+        </li>
+        <li class="nav-item m-4">
+          <button
+            type="button"
+            class="btn btn-lg btn-outline-dark font-weight-bold"
+            style="font-weight: 800;"
+            data-bs-toggle="modal" data-bs-target="#exampleModal"
+            (click)="this.menuService.isAddingMenu = false; this.menuService.isAddingWastage = true;"
+            [disabled]="!this.router.url.includes('scan')"
+          >
+            Add Wastage
+          </button>
+        </li>
+        <li class="nav-item m-4">
+          <button
+            class="btn btn-lg btn-outline-danger"
+            style="font-weight: 800;"
+            (click)="loginService.logout()"
+          >
+            Logout
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<script>
+    // jQuery to trigger click on hover
+    $('.nav-link').hover(function() {
+      $(this).trigger('click');
+    });
+  </script>

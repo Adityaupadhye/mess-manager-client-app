@@ -1,0 +1,104 @@
+/* Set box-sizing globally */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Prevent horizontal scrolling */
+body, html {
+  overflow-x: hidden; /* Hides the horizontal scrollbar */
+  margin: 0;
+  padding: 0;
+}
+
+/* Upper Half */
+.upper-half {
+  height: 50vh;
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* QR Box */
+.qr-box {
+  width: 80%;
+  /* height: 350px; */
+  border: 2px solid #343a40;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Bottom Half */
+.bottom-half {
+  min-height: 50vh;
+  background-color: #343a40;
+  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+}
+
+/* Dark Section */
+.bg-dark {
+  background-color: #343a40;
+  padding: 20px;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Table Styling */
+.table {
+  color: white;
+  margin: 0 auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.table-bordered td {
+  border: 1px solid #ffffff50;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.table td {
+  padding: 15px;
+  font-size: 16px;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+/* Centered Headings */
+.text-center {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.8rem;
+  color: #ffc107;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .upper-half, .bottom-half {
+    padding: 20px;
+  }
+
+  .qr-box {
+    width: 100%;
+    max-width: 375px;
+    height: auto;
+  }
+
+  .table td {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
