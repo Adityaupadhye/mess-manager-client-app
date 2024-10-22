@@ -13,7 +13,7 @@ export enum FoodCategory {
     LUNCH = "lunch",
     SNACKS = "snacks",
     DINNER = "dinner",
-    NA = "NA"
+    // NA = "NA"
 }
 
 export enum PersonType {

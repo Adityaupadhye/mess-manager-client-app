@@ -57,7 +57,11 @@ export class SyncService {
           return;
         }
 
-        this._serverSyncLogEntries(value);
+        const uniqueFoodLogs = this._filterOutDuplicateEntries(value);
+        console.log(`unique entries: ${uniqueFoodLogs.length}`);
+        
+
+        this._serverSyncLogEntries(uniqueFoodLogs, value);
       },
       error: (err: any) => {
         console.error('error reading indexeddb log entry: ', err);
@@ -66,7 +70,23 @@ export class SyncService {
 
   }
 
-  private _serverSyncLogEntries(entries: LogEntry[]) {
+  private _filterOutDuplicateEntries(entries: LogEntry[]) {
+    const map = new Map<string, LogEntry>();
+
+    for(const logEntry of entries) {
+      const dateString = new Date(logEntry.timestamp).toDateString();
+      const key = `${logEntry.roll_no}_${logEntry.food_category}_${dateString}`;
+
+      if(!map.has(key)) {
+        map.set(key, logEntry);
+      }
+    }
+
+
+    return Array.from(map.values()); 
+  }
+
+  private _serverSyncLogEntries(entries: LogEntry[], entriesWithDuplicates: LogEntry[]) {
 
     let data = {
       'foodlogs': entries
@@ -80,7 +100,7 @@ export class SyncService {
         console.log('posted data response: ', response);
         
         // delete log entries
-        this._deleteSyncedLogEntries(entries);
+        this._deleteSyncedLogEntries(entriesWithDuplicates);
       },
       error: (err: any) => {
         console.error('error in posting API: ', err);
@@ -89,6 +109,8 @@ export class SyncService {
   }
 
   private _deleteSyncedLogEntries(syncedEntries: LogEntry[]) {
+
+    console.log(`deleing ${syncedEntries.length} log entries from indexed db`);
 
     // create array of IDBKeys (timestamp)
     let timestamp_keys: Key[] = [];

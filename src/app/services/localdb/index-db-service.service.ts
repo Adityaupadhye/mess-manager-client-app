@@ -37,4 +37,13 @@ export class IndexDbServiceService {
 
   }
 
+  /**
+   * deletes all entries from the indexed db store
+   * @param storeName name of indexed db table
+   * @returns observable
+   */
+  clearStore(storeName: string) {
+    return this.dbService.clear(storeName);
+  }
+
 }

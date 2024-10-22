@@ -16,6 +16,7 @@ import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2
 import { NavbarComponent } from "./common/navbar/navbar.component";
 import { GetChartComponent } from './charts/get-chart/get-chart.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -38,7 +39,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     DbModuleModule,
     NgxSpinnerModule,
     BaseChartDirective,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({ timeOut: 2500 }),
     // NavbarComponent
 ],
   providers: [

@@ -2,3 +2,7 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: "Roboto", "Helvetica Neue", sans-serif; }
+
+::ng-deep .ngx-spinner {
+    z-index: 9999 !important;  /* Ensure spinner has a higher z-index */
+}

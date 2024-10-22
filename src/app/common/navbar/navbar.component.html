@@ -26,6 +26,9 @@
             type="button"
             class="btn btn-lg btn-outline-dark font-weight-bold"
             style="font-weight: 800;"
+            data-bs-toggle="modal" data-bs-target="#exampleModal"
+            (click)="addMenu()"
+            [disabled]="!this.router.url.includes('scan')"
           >
             Add Menu
           </button>
@@ -35,6 +38,9 @@
             type="button"
             class="btn btn-lg btn-outline-dark font-weight-bold"
             style="font-weight: 800;"
+            data-bs-toggle="modal" data-bs-target="#exampleModal"
+            (click)="this.menuService.isAddingMenu = false; this.menuService.isAddingWastage = true;"
+            [disabled]="!this.router.url.includes('scan')"
           >
             Add Wastage
           </button>
