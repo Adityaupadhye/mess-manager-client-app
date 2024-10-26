@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ChartOptions, ChartConfiguration, Chart, Plugin, TooltipItem } from 'chart.js';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_BASE_URL } from '../../constants';
-import { ChangeDetectorRef } from '@angular/core';
-import { formatDate } from '@angular/common';
+
 
 @Component({
   selector: 'app-get-chart',
@@ -20,6 +19,7 @@ export class GetChartComponent implements OnInit {
   public checkPieWastageData: any;
   public loadingForPieAttendence: boolean = true;
   public loadingForPieWastage: boolean = true;
+  public loadingForLineWastage: boolean = true;
   public weeklyWasteData: any;
 
   public test: any;
@@ -43,19 +43,56 @@ export class GetChartComponent implements OnInit {
 
   //========================== GET LAST 7 DAYS (WEEKLY) DATA ===========================================
   getWeeklyWastageData() {
-    this.http.get(API_BASE_URL + 'get_weekly/', {
+
+    this.http.get(API_BASE_URL + '/menu/foodmenu/get_weekly/', {
       observe: 'response'
     }).subscribe({
       next: (response: any) => {
-        this.weeklyWasteData = response.body.data; 
-        console.log(this.weeklyWasteData);
-      },
-      error: (error: any) => {
-        console.error('Error occurred:', error);
-      }
-    });
-  }
-  
+        this.loadingForLineWastage = false;
+        if (response.body && response.body.data) {
+            this.weeklyWasteData = response.body.data;
+            const foodWastageByCategory: { [key: string]: number[] } = {
+              'breakfast': new Array(7).fill(0),
+              'lunch': new Array(7).fill(0),
+              'snacks': new Array(7).fill(0),
+              'dinner': new Array(7).fill(0)
+            };
+    
+    
+            for (const [date, entries] of Object.entries(this.weeklyWasteData)) {
+              const dateObj = new Date(date);
+              const weekdayIndex = (dateObj.getDay() + 6) % 7;
+    
+              if (Array.isArray(entries)) {
+                entries.forEach((entry: any) => {
+                  const category = entry.food_category as keyof typeof foodWastageByCategory;
+                  if (foodWastageByCategory[category]) {
+                    foodWastageByCategory[category][weekdayIndex] = entry.food_wastage;
+                  }
+                });
+              }
+            }
+    
+            // Populate line chart datasets
+            this.lineChartData.datasets[0].data = foodWastageByCategory['breakfast'];
+            this.lineChartData.datasets[1].data = foodWastageByCategory['lunch'];
+            this.lineChartData.datasets[2].data = foodWastageByCategory['snacks'];
+            this.lineChartData.datasets[3].data = foodWastageByCategory['dinner'];
+    
+    
+          }else {
+            console.error('Unexpected response structure:', response.body);
+          }
+        },
+        error: (error: any) => {
+          console.error('Error occurred:', error);
+          this.loadingForLineWastage = false;
+        }
+      });
+    }
+
+
+
 
   //========================== fetch the selected date (date-wise data) ================================
   fetchSelectedDate() {
@@ -480,46 +517,17 @@ export class GetChartComponent implements OnInit {
   };
 
   // ==================================================== Line chart ===========================================================
-  public lineChartLegend = true;
-  public lineChartPlugins = [];
-
   public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: [],
+    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     datasets: [
-      {
-        data: [50, 40, 60, 70, 80, 30, 90],
-        label: 'Breakfast',
-        tension: 0.5,
-        borderColor: 'green',
-        backgroundColor: 'transparent', // No fill
-        fill: false
-      },
-      {
-        data: [70, 55, 75, 65, 45, 85, 95],
-        label: 'Lunch',
-        tension: 0.5,
-        borderColor: 'orange',
-        backgroundColor: 'transparent', // No fill
-        fill: false
-      },
-      {
-        data: [30, 50, 70, 90, 60, 40, 20],
-        label: 'Snacks',
-        tension: 0.5,
-        borderColor: 'blue',
-        backgroundColor: 'transparent', // No fill
-        fill: false
-      },
-      {
-        data: [80, 60, 40, 20, 50, 70, 100],
-        label: 'Dinner',
-        tension: 0.5,
-        borderColor: 'purple',
-        backgroundColor: 'transparent', // No fill
-        fill: false
-      }
+      { data: [], label: 'Breakfast', borderColor: 'green', tension: 0.5 },
+      { data: [], label: 'Lunch', borderColor: 'orange', tension: 0.5 },
+      { data: [], label: 'Snacks', borderColor: 'blue', tension: 0.5 },
+      { data: [], label: 'Dinner', borderColor: 'purple', tension: 0.5 }
     ]
   };
+
+  public lineChartLegend = true;
 
 
   public lineChartOptions: ChartOptions<'line'> = {
