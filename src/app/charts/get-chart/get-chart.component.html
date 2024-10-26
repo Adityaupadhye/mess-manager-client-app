@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="col-md-2 d-flex flex-column justify-content-end mb-4">
-            <button (click)="fetchSelectedDate()" class="btn btn-primary">CheckDate</button>
+            <button (click)="fetchSelectedDate()" class="btn btn-primary ">Check</button>
         </div>
     </div>
     
@@ -29,9 +29,9 @@
         <div class="col-md-6 mt-3">
           <div class="card p-3">
             <div *ngIf="loadingForPieAttendence">Loading...</div>
-              <canvas *ngIf="!loadingForPieAttendence && checkPieAttendenceData" baseChart
-              class="pie-chart"
+              <canvas *ngIf="!loadingForPieAttendence && pieChartData" 
               baseChart
+              class="pie-chart"
               [type]="'pie'"
               [data] = "pieChartData"   
               [options]="pieChartOptions"
