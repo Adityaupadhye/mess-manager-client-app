@@ -112,7 +112,8 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
       <div class="card p-3">
-        <canvas
+        <div *ngIf="loadingForLineWastage">Loading...</div>
+        <canvas *ngIf="!loadingForLineWastage && lineChartData"
           baseChart
           class="line-chart"
           [type]="'line'"
@@ -122,7 +123,9 @@
           style="display: block; margin: 0 auto"
         >
         </canvas>
-        
+        <div *ngIf="!loadingForLineWastage && !lineChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
         <div class="text-center mt-3">
           <p>
             <b style="color: black"
@@ -162,7 +165,8 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
       <div class="card p-3">
-        <canvas
+        <div *ngIf="loadingForLineWastageMonthly">Loading...</div>
+        <canvas *ngIf="!loadingForLineWastageMonthly && secondLineChartData"
           class="bar-chart"
           baseChart
           class="line-chart"
@@ -173,6 +177,9 @@
           style="display: block; margin: 0 auto"
         >
         </canvas>
+        <div *ngIf="!loadingForLineWastageMonthly && !secondLineChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
         <div class="text-center mt-3">
           <p>
             <b style="color: black"

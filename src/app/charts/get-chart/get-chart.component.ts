@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ChartOptions, ChartConfiguration, Chart, Plugin, TooltipItem } from 'chart.js';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_BASE_URL } from '../../constants';
-
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-get-chart',
@@ -20,14 +20,16 @@ export class GetChartComponent implements OnInit {
   public loadingForPieAttendence: boolean = true;
   public loadingForPieWastage: boolean = true;
   public loadingForLineWastage: boolean = true;
+  public loadingForLineWastageMonthly: boolean = true;
   public weeklyWasteData: any;
+  public monthlyWastageData: any;
 
   public test: any;
   // public dateWiseData: Date = new// Access response body here Date(); // for displaying yesterday's data
   public displayYesterdayDate: Date; // Declare without initializing here
   public dateSelected: any; //Selected date for daily data 
   public displayDate: Date | null = null; // Date to display, null by default
-
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
@@ -38,13 +40,46 @@ export class GetChartComponent implements OnInit {
     this.getDataWithDate(dateToSend);
     this.getYesterdayWastageData(dateToSend);
     this.getWeeklyWastageData();
+    this.getMonthlyFoodWastageData();
 
   }
 
+  //========================== GET Mean Food Wastage across different meal categories (Monthly) ========
+  getMonthlyFoodWastageData() {
+    this.http.get(API_BASE_URL + 'menu/foodmenu/monthly_avg_food_wastage/' , {
+      observe: 'response'
+    }).subscribe({
+      next: (response: any) => {
+        this.loadingForLineWastageMonthly = false;
+        if (response.body && response.body.data) {
+          this.monthlyWastageData = response.body.data;
+          console.log(this.monthlyWastageData)
+          const monthlyWastageData = response.body.data;
+
+        // Process the data to extract dates and avg_wastage
+        const dates = monthlyWastageData.map((entry: any) => entry.date.split('-')[2]); // Extract day from 'YYYY-MM-DD'
+        const avgWastageValues = monthlyWastageData.map((entry: any) => entry.avg_wastage);
+
+        // Update chart data
+        this.secondLineChartData.labels = dates;
+        this.secondLineChartData.datasets[0].data = avgWastageValues;
+
+        // Trigger chart update
+        this.chart?.update();
+        }
+      },
+      error: (error: any) => {
+        console.error('Error:', error);
+        this.loadingForLineWastageMonthly = false;
+      }
+    });
+  }
+
+
   //========================== GET LAST 7 DAYS (WEEKLY) DATA ===========================================
   getWeeklyWastageData() {
-
-    this.http.get(API_BASE_URL + '/menu/foodmenu/get_weekly/', {
+    
+    this.http.get(API_BASE_URL + 'menu/foodmenu/get_weekly/', {
       observe: 'response'
     }).subscribe({
       next: (response: any) => {
@@ -83,6 +118,7 @@ export class GetChartComponent implements OnInit {
           }else {
             console.error('Unexpected response structure:', response.body);
           }
+          this.cdr.detectChanges();
         },
         error: (error: any) => {
           console.error('Error occurred:', error);
@@ -511,6 +547,16 @@ export class GetChartComponent implements OnInit {
             family: 'Arial',
             weight: 'bold'
           }
+        },
+        title: {
+          display: true,
+          text: 'No. of Students', // Y-axis title
+          font: {
+            size: 18,
+            family: 'Arial',
+            weight: 'bold',
+          },
+          color: 'black',
         }
       }
     }
@@ -578,6 +624,16 @@ export class GetChartComponent implements OnInit {
             family: 'Arial',
             weight: 'bold'
           }
+        },
+        title: {
+          display: true,
+          text: 'Wastage in Kgs', // Y-axis title
+          font: {
+            size: 18,
+            family: 'Arial',
+            weight: 'bold',
+          },
+          color: 'black',
         }
       }
     }
@@ -672,25 +728,22 @@ export class GetChartComponent implements OnInit {
 
   // Line Chart Data (with Dates on X-axis)
   public secondLineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()), // Empty labels for X-axis (1-31 dates)
+    labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()),
     datasets: [
       {
-        data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100)), // Random data for avg food wastage
+        data: [],
         label: 'Mean Wastage',
         tension: 0.5,
         borderColor: 'green',
         backgroundColor: 'transparent',
         fill: false
       }
-
-
     ]
   };
-
+  
   // Line Chart Options (with "Dates" label)
   public secondLineChartOptions: ChartOptions<'line'> = {
     responsive: true,
-    // maintainAspectRatio: true,
     plugins: {
       legend: {
         labels: {
@@ -723,7 +776,6 @@ export class GetChartComponent implements OnInit {
             family: 'Arial',
             weight: 'bold',
           },
-
         },
         title: {
           display: true,
@@ -758,7 +810,6 @@ export class GetChartComponent implements OnInit {
       }
     }
   };
-
   public secondlineChartLegend = true;
 
 
