@@ -52,12 +52,12 @@ export class GetChartComponent implements OnInit {
       next: (response: any) => {
         this.loadingForLineWastageMonthly = false;
         if (response.body && response.body.data) {
-          this.monthlyWastageData = response.body.data;
-          console.log(this.monthlyWastageData)
+          // this.monthlyWastageData = response.body.data;
           const monthlyWastageData = response.body.data;
+          console.log(this.monthlyWastageData)
 
         // Process the data to extract dates and avg_wastage
-        const dates = monthlyWastageData.map((entry: any) => entry.date.split('-')[2]); // Extract day from 'YYYY-MM-DD'
+        const dates = monthlyWastageData.map((entry: any) => entry.date.split('-')[2]); 
         const avgWastageValues = monthlyWastageData.map((entry: any) => entry.avg_wastage);
 
         // Update chart data
