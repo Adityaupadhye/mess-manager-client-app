@@ -15,17 +15,23 @@
     </button>
     <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item m-4">
+        <li class="nav-item m-2">
           <a [ngClass]="{'active': this.router.url.includes('scan')}" class="nav-link font-weight-bold" aria-current="page" routerLink="/admin/scan">Home</a>
         </li>
-        <li class="nav-item m-4">
+        <li class="nav-item m-2">
           <a [ngClass]="{'active': this.router.url.includes('chart')}" class="nav-link font-weight-bold" routerLink="/admin/chart">Chart</a>
         </li>
-        <li class="nav-item m-4">
+        <li class="nav-item m-2">
+          <a [ngClass]="{'active': this.router.url.includes('dashboard')}" class="nav-link font-weight-bold" routerLink="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item m-2">
+          <a [ngClass]="{'active': this.router.url.includes('rebate')}" class="nav-link font-weight-bold" routerLink="/admin/rebate">Rebate</a>
+        </li>
+        <li class="nav-item m-2">
           <button
             type="button"
             class="btn btn-lg btn-outline-dark font-weight-bold"
-            style="font-weight: 800;"
+            style="font-weight: 500;"
             data-bs-toggle="modal" data-bs-target="#exampleModal"
             (click)="addMenu()"
             [disabled]="!this.router.url.includes('scan')"
@@ -33,11 +39,11 @@
             Add Menu
           </button>
         </li>
-        <li class="nav-item m-4">
+        <li class="nav-item m-2">
           <button
             type="button"
             class="btn btn-lg btn-outline-dark font-weight-bold"
-            style="font-weight: 800;"
+            style="font-weight: 500;"
             data-bs-toggle="modal" data-bs-target="#exampleModal"
             (click)="this.menuService.isAddingMenu = false; this.menuService.isAddingWastage = true;"
             [disabled]="!this.router.url.includes('scan')"
@@ -45,10 +51,10 @@
             Add Wastage
           </button>
         </li>
-        <li class="nav-item m-4">
+        <li class="nav-item m-2">
           <button
             class="btn btn-lg btn-outline-danger"
-            style="font-weight: 800;"
+            style="font-weight: 500;"
             (click)="loginService.logout()"
           >
             Logout

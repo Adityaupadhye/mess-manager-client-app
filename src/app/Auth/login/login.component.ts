@@ -31,7 +31,7 @@ export class LoginComponent {
     const storedUserDetails = localStorage.getItem('userDetails');
 
     if (storedUserDetails) {
-      console.log('Already logged in');
+      // console.log('Already logged in');
       const userDetails = JSON.parse(storedUserDetails);
 
       if (userDetails.role == Role.STUDENT) {
@@ -84,8 +84,8 @@ export class LoginComponent {
     // }
 
     // Validate minimum length
-    if (trimmedUsername.length < 6) {
-      alert('Username must be at least 6 characters long.');
+    if (trimmedUsername.length < 5) {
+      alert('Username must be at least 5 characters long.');
       return;
     }
 

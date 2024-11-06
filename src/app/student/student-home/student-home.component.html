@@ -1,10 +1,15 @@
+<app-navbar-student></app-navbar-student>
 <div class="container-fluid p-0">
   <!-- Upper Half -->
   <div class="row upper-half">
     <div class="col-12 d-flex justify-content-center align-items-center">
       <div class="card">
         <!-- QR Code or Image can be inserted here -->
-        <qrcode [qrdata]="studentJsonString" [width]="300" [errorCorrectionLevel]="'M'"></qrcode>
+        <qrcode
+          [qrdata]="studentJsonString"
+          [width]="300"
+          [errorCorrectionLevel]="'M'"
+        ></qrcode>
       </div>
     </div>
   </div>
@@ -17,24 +22,29 @@
         <tbody>
           <tr>
             <td class="font-weight-bold">Name:</td>
-            <td>{{studentData.name}}</td>
+            <td>{{ studentData.name }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold">Roll No:</td>
-            <td>{{studentData.roll_no}}</td>
+            <td>{{ studentData.roll_no }}</td>
           </tr>
           <tr>
             <td class="font-weight-bold">Hostel:</td>
-            <td>{{studentData.hostel}}</td>
+            <td>{{ studentData.hostel }}</td>
           </tr>
-          
         </tbody>
       </table>
 
-      <div class="d-flex justify-content-center mt-5" >
-        <button mat-raised-button class="btn btn-light" (click)="loginService.logout()">Logout</button>
-        <!-- <button mat-flat-button (click)="loginService.logout()">Logout</button> -->
+      <div class="d-flex justify-content-center mt-5">
+        <button
+          mat-raised-button
+          class="btn btn-light"
+          (click)="loginService.logout()"
+        >
+          Logout
+        </button>
+        
+      </div>
     </div>
-</div>
-
+  </div>
 </div>

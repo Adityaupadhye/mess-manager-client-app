@@ -1,0 +1,20 @@
+<app-navbar></app-navbar>
+<div class="body_container">
+  <div class="row justify-content-between custom-row">
+    <div class="p-3 col-6 text-left custom-header-row"><h2> Hostel: {{ userDetails?.hostel || 'No hostel assigned' }}</h2></div>
+    <div class="p-3 col-6 text-right custom-header-row "><h2>{{ todayDate }}</h2></div>
+    
+  </div>
+ 
+<div class="container">
+  
+  <div class="header">Every plate counts</div>
+
+  <div class="stats-container">
+    <div class="stat" *ngFor="let stat of stats">
+      <div class="stat-number">{{ stat.number }}</div>
+      <div class="stat-description">{{ stat.description }}</div>
+    </div>
+  </div>
+</div>
+</div>

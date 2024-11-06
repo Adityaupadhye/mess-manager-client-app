@@ -225,7 +225,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
         next: (result) => {
           console.log(`user record with roll_no: ${userRollNo}: `, result);
 
-          if (result != null) {
+          if (result == undefined || result != null) {
             this.isUserValid = true;
             // add log entry locally
             this.addLogEntry(parsedUserData, this.currentPersonType);

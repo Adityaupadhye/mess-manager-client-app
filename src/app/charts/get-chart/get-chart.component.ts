@@ -45,7 +45,7 @@ export class GetChartComponent implements OnInit {
   }
 
   //========================== GET Mean Food Wastage across different meal categories (Monthly) ========
-  getMonthlyFoodWastageData() {
+  getMonthlyFoodWastageData() { //monthly/
     this.http.get(API_BASE_URL + 'menu/foodmenu/monthly_avg_food_wastage/' , {
       observe: 'response'
     }).subscribe({
@@ -163,9 +163,10 @@ export class GetChartComponent implements OnInit {
     }).subscribe({
       next: (response: any) => {
         this.loadingForPieWastage = false;
-
+        
         if (response.body && response.body.data && response.body.data.length > 0) {
           const checkPieWastageData = response.body.data; //Assigning the results
+          
           //Preapre labels
           const labels: string[] = [];
           const datasetWithMenuAndWastage: { food_wastage: number, menu: string[] }[] = [];

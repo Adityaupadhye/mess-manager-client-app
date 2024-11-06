@@ -1,0 +1,101 @@
+<app-navbar-student></app-navbar-student>
+<div class="container-fluid p-0">
+  <!-- Upper Half -->
+  <div class="row upper-half">
+    <div class="col-12 col-md-8 col-lg-6 d-flex flex-column align-items-center">
+      <h1 class="display-4">Request Rebate</h1>
+
+      <div class="alert alert-primary w-100" role="alert">
+        Rebates can be requested for durations between 3 and 15 days, Rebate has to be requested 2 days prior to today's date.
+      </div>
+
+      <div class="card p-4 mt-3 custom-card-size">
+        <!-- Date Range Form Field -->
+        <mat-form-field appearance="fill" class="w-100 date-field">
+          <mat-label>Choose Start and End Date</mat-label>
+          <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+            <input
+              matStartDate
+              formControlName="start"
+              placeholder="Start date"
+              required
+              (dateChange)="onStartDateChange($event)"
+            />
+            <input
+              matEndDate
+              formControlName="end"
+              placeholder="End date"
+              required
+              (dateChange)="onEndDateChange($event)"
+            />
+          </mat-date-range-input>
+
+          <!-- Date Range Hints -->
+          <mat-hint *ngIf="range.value.start && range.value.end">
+            Start date: {{ range.value.start | date: 'MM/dd/yyyy' }} – End Date: {{ range.value.end | date: 'MM/dd/yyyy' }}
+          </mat-hint>
+          <mat-hint *ngIf="!range.value.start || !range.value.end">
+            Start: MM/DD/YYYY – End: MM/DD/YYYY
+          </mat-hint>
+
+          <!-- Duration Hint and Error -->
+          <mat-hint *ngIf="range.value.start && range.value.end">
+            Duration: {{ duration }} days
+          </mat-hint>
+          <mat-hint *ngIf="duration < 3 || duration > 15" class="text-danger">
+            Invalid Duration, select again
+          </mat-hint>
+          <mat-hint *ngIf="duration >= 3 && duration <= 15" class="text-success">
+            Valid Duration
+          </mat-hint>
+
+          <!-- Date Picker Toggle -->
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker touchUi #picker></mat-date-range-picker>
+        </mat-form-field>
+
+        <!-- Rebate Reason Textbox with Extra Margin -->
+        <mat-form-field appearance="fill" class="mt-4 w-100 reason-field">
+          <mat-label>Rebate Reason</mat-label>
+          <input
+            matInput
+            placeholder="Enter reason for rebate"
+            formControlName="reason"
+          />
+        </mat-form-field>
+
+        <!-- Submit Button -->
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="submitRebate()"
+          class="mt-3"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+   <!-- Bottom Half -->
+   <div class="row bottom-half">
+    <div class="col-12 col-md-10 col-lg-8 bg-dark mx-auto">
+      <h2 class="text-center mb-4 text-center">Rebate History</h2>
+      <table class="table table-bordered table-hover table-striped text-white">
+        <thead class="table-heading" style="font-weight: 500">
+          <tr>
+            <th>#</th>
+            <th>Rebate Id</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rebate history rows will go here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

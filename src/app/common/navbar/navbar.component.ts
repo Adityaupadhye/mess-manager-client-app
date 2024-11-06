@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { LoginService } from '../../services/auth/login.service';
-import { SharedMaterialComponentsModule } from '../../shared-material-components/shared-material-components.module';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { MenuService } from '../../services/menu/menu.service';
 
 @Component({

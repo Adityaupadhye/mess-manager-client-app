@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { QRCodeModule } from 'angularx-qrcode'; 
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/auth/login.service';
+import { NavbarStudentComponent } from '../navbar-student/navbar-student.component';
+import { AppModule } from '../../app.module';
 
 @Component({
   selector: 'app-student-home',
-  standalone: true,
-  imports: [SharedMaterialComponentsModule, FormsModule, QRCodeModule],
+  // standalone: true,
+  // imports: [AppModule, SharedMaterialComponentsModule, FormsModule, QRCodeModule],
   templateUrl: './student-home.component.html',
   styleUrl: './student-home.component.css'
 })

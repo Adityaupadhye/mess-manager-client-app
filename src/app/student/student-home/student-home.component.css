@@ -1,16 +1,13 @@
-/* Set box-sizing globally */
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* Prevent horizontal scrolling */
 body, html {
-  overflow-x: hidden; /* Hides the horizontal scrollbar */
+  overflow-x: hidden; 
   margin: 0;
   padding: 0;
 }
 
-/* Upper Half */
 .upper-half {
   height: 50vh;
   background-color: #f7f7f7;
@@ -20,7 +17,6 @@ body, html {
   padding: 20px;
 }
 
-/* QR Box */
 .qr-box {
   width: 80%;
   /* height: 350px; */
@@ -33,7 +29,6 @@ body, html {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Bottom Half */
 .bottom-half {
   min-height: 50vh;
   background-color: #343a40;
@@ -42,7 +37,6 @@ body, html {
   align-items: center;
 }
 
-/* Dark Section */
 .bg-dark {
   background-color: #343a40;
   padding: 20px;
@@ -51,7 +45,6 @@ body, html {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Table Styling */
 .table {
   color: white;
   margin: 0 auto;
@@ -77,14 +70,12 @@ body, html {
   font-weight: bold;
 }
 
-/* Centered Headings */
 .text-center {
   font-family: 'Roboto', sans-serif;
   font-size: 1.8rem;
   color: #ffc107;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .upper-half, .bottom-half {
     padding: 20px;
