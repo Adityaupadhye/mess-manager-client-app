@@ -28,12 +28,12 @@ export class RebateComponent {
   }
 
   getrebates() {
-    this.http.get(API_BASE_URL+ 'rebates/', {
+    this.http.get(API_BASE_URL+ 'rebates/?status=pending', {
       observe: 'response'
     }).subscribe({
       next: (response: any) => {
         this.rebateData = response.body;
-        console.log("Rebate",this.rebateData)
+        console.log("Rebate",this.rebateData);
       },
       error: (error) => {
         console.error("Error fetching rebates:", error);

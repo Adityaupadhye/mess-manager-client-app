@@ -23,3 +23,7 @@ body, html {
   padding-bottom: 10px; 
   height: fit-content;
 }
+
+.navbar-toggler {
+  margin-right: 10px;
+}

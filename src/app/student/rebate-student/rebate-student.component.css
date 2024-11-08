@@ -12,7 +12,7 @@
   /* Alert and Card Styles */
   .custom-card-size {
     width: 90%; /* Responsive width */
-    max-width: 600px; /* Limit width on larger screens */
+    max-width: 600px; 
     padding: 20px;
     margin: 10px 0;
     height: auto; /* Allows height to expand based on content */
@@ -32,6 +32,7 @@
     align-items: center;
     padding: 20px;
     flex-direction: column;
+    margin-right: 0px; 
   }
   
   /* Bottom Half Section */
@@ -41,6 +42,7 @@
     padding: 20px 10px;
     display: flex;
     align-items: center;
+    margin-right: 0px; 
   }
   
   .bg-dark {
