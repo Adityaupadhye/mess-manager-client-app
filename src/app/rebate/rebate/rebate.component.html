@@ -10,77 +10,151 @@
   </div>
 
   <div class="container mt-4">
-    <div class="row mb-3">
-      <div class="col-12 table_heading">
-        <h2>Rebate requests</h2>
+    <div class="pending_requests">
+      <div class="row mb-3">
+        <div class="col-12 table_heading">
+          <h2>Rebate requests</h2>
+        </div>
+      </div>
+      <div class="card shadow-sm">
+        <div
+          class="table-responsive"
+          *ngIf="rebateData.length > 0; else noRecords"
+        >
+          <table class="table table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Serial No.</th>
+                <th scope="col">ID</th>
+                <th scope="col">Hostel</th>
+                <th scope="col">Roll No</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Status</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rebate of rebateData; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ rebate.id }}</td>
+                <td>{{ rebate.hostel }}</td>
+                <td>{{ rebate.roll_no }}</td>
+                <td>{{ rebate.start_date }}</td>
+                <td>{{ rebate.end_date }}</td>
+                <td>{{ rebate.duration }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success': rebate.status === 'active',
+                      'bg-info': rebate.status === 'inactive',
+                      'bg-warning text-dark': rebate.status === 'pending',
+                      'bg-danger':
+                        rebate.status === 'expired' ||
+                        rebate.status === 'rejected'
+                    }"
+                  >
+                    <div style="font-size: medium; padding-top: 3px">
+                      {{ rebate.status }}
+                    </div>
+                  </span>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-success me-2"
+                    style="font-size: 0.9rem"
+                    (click)="updateRebateStatus(rebate.id, 'inactive')"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger"
+                    style="font-size: 0.9rem"
+                    (click)="updateRebateStatus(rebate.id, 'rejected')"
+                  >
+                    Reject
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- No Records Message -->
+        <ng-template #noRecords>
+          <div class="p-3 text-center text-muted">
+            <h5>No rebate requests so far</h5>
+          </div>
+        </ng-template>
       </div>
     </div>
-    <div class="card shadow-sm">
-      <div class="table-responsive" *ngIf="rebateData.length > 0; else noRecords">
-        <table class="table table-hover">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">Serial No.</th>
-              <th scope="col">ID</th>
-              <th scope="col">Hostel</th>
-              <th scope="col">Roll No</th>
-              <th scope="col">Start Date</th>
-              <th scope="col">End Date</th>
-              <th scope="col">Duration</th>
-              <th scope="col">Status</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let rebate of rebateData; let i = index">
-              <td>{{ i + 1 }}</td>
-              <td>{{ rebate.id }}</td>
-              <td>{{ rebate.hostel }}</td>
-              <td>{{ rebate.roll_no }}</td>
-              <td>{{ rebate.start_date }}</td>
-              <td>{{ rebate.end_date }}</td>
-              <td>{{ rebate.duration }}</td>
-              <td>
-                <span
-                  class="badge"
-                  [ngClass]="{
-                    'bg-success': rebate.status === 'active',
-                    'bg-info': rebate.status === 'inactive',
-                    'bg-warning text-dark': rebate.status === 'pending',
-                    'bg-danger': rebate.status === 'expired' || rebate.status === 'rejected'
-                  }"
-                >
-                  <div style="font-size: medium; padding-top: 3px;">{{ rebate.status }}</div>
-                </span>
-              </td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-success me-2"
-                  style="font-size: .9rem;"
-                  (click)="updateRebateStatus(rebate.id, 'inactive')"
-                >
-                  Accept
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger"
-                  style="font-size: .9rem;"
-                  (click)="updateRebateStatus(rebate.id, 'rejected')"
-                >
-                  Reject
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- No Records Message -->
-      <ng-template #noRecords>
-        <div class="p-3 text-center text-muted">
-          <h5>No rebate requests so far</h5>
+    <div class="active_requests mt-5">
+      <div class="row mb-3">
+        <div class="col-12 table_heading">
+          <h2>Active Requests</h2>
         </div>
-      </ng-template>
+      </div>
+      <div class="card shadow-sm">
+        <div
+          class="table-responsive"
+          *ngIf="activerebateData.length > 0; else noRecords"
+        >
+          <table class="table table-hover">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Serial No.</th>
+                <th scope="col">ID</th>
+                <th scope="col">Hostel</th>
+                <th scope="col">Roll No</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Status</th>
+               
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rebate of activerebateData; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ rebate.id }}</td>
+                <td>{{ rebate.hostel }}</td>
+                <td>{{ rebate.roll_no }}</td>
+                <td>{{ rebate.start_date }}</td>
+                <td>{{ rebate.end_date }}</td>
+                <td>{{ rebate.duration }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success': rebate.status === 'active',
+                      'bg-info': rebate.status === 'inactive',
+                      'bg-warning text-dark': rebate.status === 'pending',
+                      'bg-danger':
+                        rebate.status === 'expired' ||
+                        rebate.status === 'rejected'
+                    }"
+                  >
+                    <div style="font-size: medium; padding-top: 3px">
+                      {{ rebate.status }}
+                    </div>
+                  </span>
+                </td>
+               
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- No Records Message -->
+        <ng-template #noRecords>
+          <div class="p-3 text-center text-muted">
+            <h5>No rebate requests so far</h5>
+          </div>
+        </ng-template>
+      </div>
     </div>
   </div>
+
 </div>

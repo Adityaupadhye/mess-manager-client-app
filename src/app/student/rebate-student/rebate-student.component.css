@@ -25,7 +25,7 @@
   
   /* Upper Half Section */
   .upper-half {
-    min-height: 50vh;
+    /* min-height: 50vh; */
     background-color: #f7f7f7;
     display: flex;
     justify-content: center;
@@ -37,7 +37,7 @@
   
   /* Bottom Half Section */
   .bottom-half {
-    min-height: 20vh;
+    /* min-height: 20vh; */
     background-color: #343a40;
     padding: 20px 10px;
     display: flex;
@@ -127,6 +127,18 @@
   margin-top: 1.5rem; /* Ensure extra space between date field hints and Reason field */
 }
 
+h1.display-4 {
+  font-size: 2rem; /* Smaller font for mobile */
+  text-align: center;
+}
+
+@media (max-width: 576px) {
+  h1.display-4 {
+    font-size: 1.5rem; /* Further reduce font-size on smaller screens */
+    margin-top: 10px; /* Adjust top margin if needed */
+  }
+}
+
 /* Mobile-specific styling */
 @media (max-width: 576px) {
   .container-fluid {
@@ -134,11 +146,11 @@
   }
 
   .date-field mat-hint, .reason-field mat-hint {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
   }
 
   /* Adjust font-size and padding for better readability on small screens */
-  .alert, .card, h1.display-4 {
+  .alert, .card {
     font-size: 1.1rem;
   }
 }

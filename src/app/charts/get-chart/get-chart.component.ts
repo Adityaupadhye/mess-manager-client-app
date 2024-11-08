@@ -29,6 +29,18 @@ export class GetChartComponent implements OnInit {
   public displayYesterdayDate: Date; // Declare without initializing here
   public dateSelected: any; //Selected date for daily data 
   public displayDate: Date | null = null; // Date to display, null by default
+
+  lineChartData: any = {
+    labels: [],
+    datasets: [
+      { label: 'Breakfast', data: [] },
+      { label: 'Lunch', data: [] },
+      { label: 'Snacks', data: [] },
+      { label: 'Dinner', data: [] }
+    ]
+  };
+  
+
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
@@ -94,19 +106,32 @@ export class GetChartComponent implements OnInit {
             };
     
     
-            for (const [date, entries] of Object.entries(this.weeklyWasteData)) {
-              const dateObj = new Date(date);
-              const weekdayIndex = (dateObj.getDay() + 6) % 7;
-    
-              if (Array.isArray(entries)) {
-                entries.forEach((entry: any) => {
-                  const category = entry.food_category as keyof typeof foodWastageByCategory;
-                  if (foodWastageByCategory[category]) {
-                    foodWastageByCategory[category][weekdayIndex] = entry.food_wastage;
-                  }
-                });
-              }
+            // Generate labels with day and date
+            const labels: string[][] = [];
+            const today = new Date();
+            for (let i = 0; i < 7; i++) {
+              const date = new Date(today);
+              date.setDate(today.getDate() - (6 - i));  // Adjust for past 7 days
+              const dayName = date.toLocaleString('en-us', { weekday: 'short' });
+              const formattedDate = date.toISOString().split('T')[0];
+              labels.push([formattedDate, dayName]); // Two-line label as an array of strings
             }
+            this.lineChartData.labels = labels;
+
+          // Populate wastage data
+          for (const [date, entries] of Object.entries(this.weeklyWasteData)) {
+            const dateObj = new Date(date);
+            const weekdayIndex = (dateObj.getDay() + 6) % 7;
+
+            if (Array.isArray(entries)) {
+              entries.forEach((entry: any) => {
+                const category = entry.food_category as keyof typeof foodWastageByCategory;
+                if (foodWastageByCategory[category]) {
+                  foodWastageByCategory[category][weekdayIndex] = entry.food_wastage;
+                }
+              });
+            }
+          }
     
             // Populate line chart datasets
             this.lineChartData.datasets[0].data = foodWastageByCategory['breakfast'];
@@ -564,15 +589,15 @@ export class GetChartComponent implements OnInit {
   };
 
   // ==================================================== Line chart ===========================================================
-  public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    datasets: [
-      { data: [], label: 'Breakfast', borderColor: 'green', tension: 0.5 },
-      { data: [], label: 'Lunch', borderColor: 'orange', tension: 0.5 },
-      { data: [], label: 'Snacks', borderColor: 'blue', tension: 0.5 },
-      { data: [], label: 'Dinner', borderColor: 'purple', tension: 0.5 }
-    ]
-  };
+  // public lineChartData: ChartConfiguration<'line'>['data'] = {
+  //   labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+  //   datasets: [
+  //     { data: [], label: 'Breakfast', borderColor: 'green', tension: 0.5 },
+  //     { data: [], label: 'Lunch', borderColor: 'orange', tension: 0.5 },
+  //     { data: [], label: 'Snacks', borderColor: 'blue', tension: 0.5 },
+  //     { data: [], label: 'Dinner', borderColor: 'purple', tension: 0.5 }
+  //   ]
+  // };
 
   public lineChartLegend = true;
 

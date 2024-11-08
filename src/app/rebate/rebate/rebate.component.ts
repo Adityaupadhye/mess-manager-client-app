@@ -19,12 +19,15 @@ export class RebateComponent {
   userDetails: UserDetails | null = null;
   todayDate: string = '';
   rebateData: any[] = [];
+  activerebateData: any[] = [];
+
 
   constructor(private http: HttpClient) { }
   ngOnInit() {
     this.loadUserDetails(); 
     this.formatDate();
     this.getrebates();
+    this.getActiveRebates();
   }
 
   getrebates() {
@@ -33,13 +36,28 @@ export class RebateComponent {
     }).subscribe({
       next: (response: any) => {
         this.rebateData = response.body;
-        console.log("Rebate",this.rebateData);
+        // console.log("Rebate",this.rebateData);
       },
       error: (error) => {
         console.error("Error fetching rebates:", error);
       }
     });
   }
+
+  getActiveRebates() {
+    this.http.get(API_BASE_URL+ 'rebates/?status=inactive', {
+      observe: 'response'
+    }).subscribe({
+      next: (response: any) => {
+        this.activerebateData = response.body;
+        // console.log("Rebate",this.activerebateData);
+      },
+      error: (error) => {
+        console.error("Error fetching rebates:", error);
+      }
+    });
+  }
+
 
   // Update Status yo Active
   updateRebateStatus(id: number, newStatus: string) {
