@@ -1,0 +1,29 @@
+body, html {
+  overflow-x: hidden;
+}
+
+.container-fluid {
+  padding: 0;
+  margin: 0;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 3rem; 
+  color: #11001f; 
+}
+
+.nav-item .nav-link {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.navbar {
+  padding-top: 5px; 
+  padding-bottom: 10px; 
+  height: fit-content;
+}
+
+.navbar-toggler {
+  margin-right: 10px;
+}

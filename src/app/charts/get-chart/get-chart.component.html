@@ -3,34 +3,46 @@
   <div class="mt-5 row justify-content-center">
     <div class="col-md-2"></div>
     <div class="col-md-8">
-      <div class="row justify-content-between align-items-center">
-        <div class="col-md-3">
-          <p class="daily-data text-white">Daily Data</p>
+      <div class="row">
+        <div class="col-md-8 d-flex flex-column justify-content-end" style="height: 100px;">
+            <p class="daily-data text-white mb-4">
+                Date-wise Data: 
+                <span *ngIf="displayDate; else showYesterdayDate">{{ displayDate | date: 'EEE MMM d yyyy' }}</span>
+                <ng-template #showYesterdayDate>{{ displayYesterdayDate | date: 'EEE MMM d yyyy' }}</ng-template>
+            </p>
         </div>
-      
-        <div class="col-md-3 text-end">
-         
-      </div>
-
-        
-      </div>
+    
+        <div class="col-md-2 text-end">
+            <!-- Date Picker -->
+            <div class="mb-3">
+                <label for="date" class="col-form-label">Select Date:</label>
+                <input type="date" class="form-control" id="date" [(ngModel)]="dateSelected" (ngModelChange)="onDateChange()">
+            </div>
+        </div>
+        <div class="col-md-2 d-flex flex-column justify-content-end mb-4">
+            <button (click)="fetchSelectedDate()" class="btn btn-primary ">Check</button>
+        </div>
+    </div>
+    
 
       <div class="row">
         <div class="col-md-6 mt-3">
           <div class="card p-3">
             <div *ngIf="loadingForPieAttendence">Loading...</div>
-              <canvas *ngIf="!loadingForPieAttendence && checkPieAttendenceData" baseChart
-              class="pie-chart"
+              <canvas *ngIf="!loadingForPieAttendence && pieChartData" 
               baseChart
+              class="pie-chart"
               [type]="'pie'"
-              [labels]="pieChartLabels"
-              [datasets]="pieChartDatasets"
+              [data] = "pieChartData"   
               [options]="pieChartOptions"
               [plugins]="pieChartPlugins"
               [legend]="pieChartLegend"
               style="margin: 0 auto"
             >
             </canvas>
+            <div *ngIf="!loadingForPieAttendence && !pieChartData" class="text-center">
+              <p><b>No Data Available for the Selected Date</b></p>
+            </div>
             <div class="text-center mt-3">
               <p><b>Student attendance across different meal categories</b></p>
             </div>
@@ -50,6 +62,9 @@
               style="display: block; margin: 0 auto"
             >
             </canvas>
+            <div *ngIf="!loadingForPieWastage && !doughnutChartData" class="text-center">
+              <p><b>No Data Available for the Selected Date</b></p>
+            </div>
             <div class="text-center mt-3">
               <p><b>Food Wastage across different meal categories</b></p>
             </div>
@@ -97,7 +112,8 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
       <div class="card p-3">
-        <canvas
+        <div *ngIf="loadingForLineWastage">Loading...</div>
+        <canvas *ngIf="!loadingForLineWastage && lineChartData"
           baseChart
           class="line-chart"
           [type]="'line'"
@@ -107,10 +123,14 @@
           style="display: block; margin: 0 auto"
         >
         </canvas>
+        <div *ngIf="!loadingForLineWastage && !lineChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
         <div class="text-center mt-3">
           <p>
             <b style="color: black"
-              >Food Wastage across different meal categories (Weekly)</b
+              >Food Wastage across different meal categories (Last 7
+              days)</b
             >
           </p>
         </div>
@@ -122,14 +142,18 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
       <div class="card p-3">
-        <canvas
+        <div *ngIf="loadingForBarMonthlyAttendence">Loading...</div>
+        <canvas *ngIf="!loadingForBarMonthlyAttendence && secondBarChartData"
+        baseChart
           class="bar-chart"
-          baseChart
+          [type]="'bar'"
           [data]="secondBarChartData"
           [options]="secondBarChartOptions"
-          [type]="'bar'"
           style="display: block; margin: 0 auto"
         ></canvas>
+        <div *ngIf="!loadingForBarMonthlyAttendence && !secondBarChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
         <div class="text-center mt-3">
           <p>
             <b style="color: black"
@@ -146,7 +170,8 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
       <div class="card p-3">
-        <canvas
+        <div *ngIf="loadingForLineWastageMonthly">Loading...</div>
+        <canvas *ngIf="!loadingForLineWastageMonthly && secondLineChartData"
           class="bar-chart"
           baseChart
           class="line-chart"
@@ -157,6 +182,9 @@
           style="display: block; margin: 0 auto"
         >
         </canvas>
+        <div *ngIf="!loadingForLineWastageMonthly && !secondLineChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
         <div class="text-center mt-3">
           <p>
             <b style="color: black"
@@ -168,5 +196,5 @@
     </div>
     <div class="col-md-2"></div>
   </div>
-  <div class="my-5"></div>
+  <div class="pb-2"></div>
 </div>

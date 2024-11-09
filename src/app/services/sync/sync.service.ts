@@ -5,15 +5,24 @@ import { API_BASE_URL, INDEXED_DB_LOG_ENTRY_STORE_NAME, INDEXED_DB_USERS_STORE_N
 import { User } from '../../data/user';
 import { LogEntry } from '../../data/log-entry';
 import { Key } from 'ngx-indexed-db';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { LoginService } from '../auth/login.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SyncService {
 
+  public activeRebates: any[] = []
+
   constructor(
     private http: HttpClient,
-    private idbService: IndexDbServiceService
+    private idbService: IndexDbServiceService,
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,
+    private loginService: LoginService,
   ) { }
 
 
@@ -43,6 +52,33 @@ export class SyncService {
       })
   }
 
+  fetchActiveRebates() {
+
+    let currentUser = this.loginService.getCurrentUser();
+
+    if(currentUser == null) {
+      console.debug('cannot find current use locally');
+      return;
+    }
+
+    // let user = JSON.parse(currentUser);
+
+    this.http.get(`${environment.apiBaseUrl}rebates/?hostel=${currentUser.hostel}&status=active`)
+    .subscribe({
+      next: (response: any) => {
+        console.log('rebates: ', response);
+        for(let rebateItem of response) {
+          this.activeRebates.push(rebateItem['roll_no']);
+        }
+      },
+      error: (err: any) => {
+        console.error('err in rebate fetch: ', err);
+        
+      }
+     })
+
+  }
+
   syncLogEntries() {
     console.log('syncing log entries');
 
@@ -54,6 +90,7 @@ export class SyncService {
 
         if(logEntryCount == 0) {
           console.log('no log entry found skipping server sync');
+          this.toastr.info('Nothing to sync');
           return;
         }
 
@@ -93,17 +130,22 @@ export class SyncService {
     };
     console.log('post log entry API call start');
     
+    this.spinner.show();
 
     this.http.post(API_BASE_URL+'post/', data)
     .subscribe({
       next: (response: any) => {
         console.log('posted data response: ', response);
+        this.toastr.success('Data synced successfully!');
         
         // delete log entries
         this._deleteSyncedLogEntries(entriesWithDuplicates);
+        this.spinner.hide();
       },
       error: (err: any) => {
         console.error('error in posting API: ', err);
+        this.toastr.error('Error in data syncing!!');
+        this.spinner.hide();
       }
     })
   }

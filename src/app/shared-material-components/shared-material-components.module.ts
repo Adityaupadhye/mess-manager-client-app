@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
@@ -18,6 +18,8 @@ import {MatInputModule} from '@angular/material/input';
     CommonModule
   ],
   exports: [
+    MatDatepickerModule, 
+    JsonPipe,
     MatButtonModule,
     MatFormFieldModule,
     MatCardModule,

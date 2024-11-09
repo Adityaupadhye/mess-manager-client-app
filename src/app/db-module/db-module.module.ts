@@ -6,7 +6,7 @@ import { INDEXED_DB_LOG_ENTRY_STORE_NAME, INDEXED_DB_USERS_STORE_NAME } from '..
 
 const dbConfig: DBConfig = {
   name: 'local_db_instance',
-  version: 1,
+  version: 2,
   objectStoresMeta: [
     {
       store: INDEXED_DB_USERS_STORE_NAME,
@@ -22,11 +22,11 @@ const dbConfig: DBConfig = {
       store: INDEXED_DB_LOG_ENTRY_STORE_NAME,
       storeConfig: { keyPath: 'timestamp', autoIncrement: false },
       storeSchema: [
-        { name: 'name', keypath: 'name', options: { unique: false } },
+        { name: 'roll_no', keypath: 'roll_no', options: { unique: false } },
         { name: 'food_category', keypath: 'food_category', options: { unique: false } },
         { name: 'timestamp', keypath: 'timestamp', options: { unique: false } },
         { name: 'type', keypath: 'type', options: { unique: false } }
-      ]
+      ],
     }
   ]
 };

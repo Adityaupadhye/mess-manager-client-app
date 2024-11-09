@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MenuService } from '../../services/menu/menu.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { SyncService } from '../../services/sync/sync.service';
 
 @Component({
   selector: 'app-scanner',
@@ -23,6 +24,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ScannerComponent implements OnInit, AfterViewInit {
 
   protected _scanningError = false;
+  protected _hasScanningStarted = false;
   protected foodCategories = Object.values(FoodCategory);
 
   scannedResult: string = 'res';
@@ -34,6 +36,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
   selectedDevice: MediaDeviceInfo | undefined;
 
   isUserValid: boolean = false;
+  protected userValidityError: string = ''
   currentFoodCategory: FoodCategory = FoodCategory.BREAKFAST;
   currentPersonType: PersonType = PersonType.STUDENT;
 
@@ -60,7 +63,8 @@ export class ScannerComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     public menuService: MenuService,
     private spinner: NgxSpinnerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private syncService: SyncService,
   ) {
 
     // Initialize form with controls
@@ -83,9 +87,9 @@ export class ScannerComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.form.get('date')?.valueChanges.subscribe((value) => {
-      if(!this.menuService.isAddingWastage) {
-        return;
-      }
+      // if(!this.menuService.isAddingWastage) {
+      //   return;
+      // }
       console.log('date changed to:', value);
 
       if(value.length == 0) {
@@ -109,6 +113,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
 
           if(menuItem) {
             this.form.patchValue({'id': menuItem['id'], 'menu': menuItem['menu'], 'food_wastage': menuItem['food_wastage']});
+            this.form.get('food_wastage')?.enable();
           }
         }, 
         error: (err: any) => {
@@ -119,15 +124,18 @@ export class ScannerComponent implements OnInit, AfterViewInit {
             food_wastage: 0.00,
             menu: ''
           });
+          this.currentSelectedMenuList = [];
+          this.form.get('food_wastage')?.disable();
+          this.form.setErrors({ invalid: true });
           
         }
       })
     });  
 
     this.form.get('food_category')?.valueChanges.subscribe((value: any) => {
-      if(!this.menuService.isAddingWastage) {
-        return;
-      }
+      // if(!this.menuService.isAddingWastage) {
+      //   return;
+      // }
 
       console.debug('food cat: ', value);
       const menuItem = this.currentSelectedMenuList.find((item: any) => item.food_category === value);
@@ -136,6 +144,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
 
       if(menuItem) {
         this.form.patchValue({'id': menuItem['id'], 'menu': menuItem['menu'], 'food_wastage': menuItem['food_wastage']});
+        this.form.get('food_wastage')?.enable();
       }
     })
   }
@@ -179,6 +188,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
     this._playSound();
     console.log('result: ', result);
     this.scannedResult = result
+    this._hasScanningStarted = true;
 
     try {
       let parsedStudentData = JSON.parse(result);
@@ -209,6 +219,8 @@ export class ScannerComponent implements OnInit, AfterViewInit {
     this.scannedResult = '';
     this._scanningError = false;
     this.isUserValid = false;
+    this._hasScanningStarted = false;
+    this.userValidityError = '';
   }
 
   private _playSound() {
@@ -222,13 +234,57 @@ export class ScannerComponent implements OnInit, AfterViewInit {
     const userRollNo = parsedUserData['roll_no'];
     this.iDBService.getRecordByKey(INDEXED_DB_USERS_STORE_NAME, userRollNo)
       .subscribe({
-        next: (result) => {
+        next: (result: any) => {
           console.log(`user record with roll_no: ${userRollNo}: `, result);
+
+          // if result is undefined means student belongs to other hostel or is not authorized
+          if(result == undefined) {
+            console.debug('student from other hostel');
+            this.isUserValid = false;
+            this.userValidityError = 'User not registered';
+            return;
+          }
 
           if (result != null) {
             this.isUserValid = true;
-            // add log entry locally
-            this.addLogEntry(parsedUserData, this.currentPersonType);
+            // check for duplicate entry in log entries
+            this.iDBService.getRecordByIndex(INDEXED_DB_LOG_ENTRY_STORE_NAME, 'roll_no', userRollNo)
+            .subscribe({
+              next: (values: any[]) => {
+                const parsedDay = new Date().toLocaleDateString();
+                console.log('parsed day: ', parsedDay);
+
+                // loop through entries
+                for(let logEntry of values) {
+                  const entryDate = new Date(logEntry['timestamp']*1000).toLocaleDateString();
+                  console.log('entry date: ', entryDate);
+                  
+                  if(entryDate == parsedDay && logEntry['food_category'] == this.currentFoodCategory) {
+                    console.log('duplicate scannig detected');
+                    this.isUserValid = false;
+                    this.userValidityError = 'Already scanned for this meal today.';
+                    return;
+                  }
+                }
+
+                // check for rebates
+                let isRebateActive = this.syncService.activeRebates.includes(userRollNo);
+                console.debug('is rebate active: ', isRebateActive);
+                if(isRebateActive) {
+                  this.isUserValid = false;
+                  this.userValidityError = 'Your rebate is currently active.'
+                  return;
+                }
+
+                // add log entry locally
+                console.debug('adding log entry...');
+                this.userValidityError = '';
+                this.addLogEntry(parsedUserData, this.currentPersonType);
+              }, 
+              error: (err: any) => {
+                console.error('error in finding record by index: ', err);
+              }
+            });
 
           }
           else {
@@ -279,14 +335,15 @@ export class ScannerComponent implements OnInit, AfterViewInit {
 
   // menu and wastage
 
-  fetchMenu() {
+  onModalOpen() {
     console.log('menu fetch on modal open: ', this.menuService.isAddingMenu, this.menuService.isAddingWastage);
 
-    if(this.menuService.isAddingWastage)
-      this.form.get('menu')?.disable(); // To disable
-    else {
-
+    if(this.menuService.isAddingWastage){
+      this.form.get('menu')?.disable();
+      this.form.get('food_wastage')?.disable();
+    } else {
       this.form.get('menu')?.enable();  // To enable
+      this.form.get('food_wastage')?.enable();
     }
 
   }

@@ -1,20 +1,27 @@
 .logo {
-  /* font-family: "Pacifico", cursive; Ensure you have imported the Pacifico font */
   font-weight: bold;
-  font-size: 3rem; /* Adjust size as needed */
-  color: #11001f; /* You can choose any color you like */
-  /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); */
- /* Adds some margin around the logo */
+  font-size: 3rem; 
+  color: #11001f; 
+ 
 }
 
 .nav-item .nav-link {
   
-  font-weight: 800;
+  font-weight: 600;
   font-size: 1.25rem;
 }
 
 .navbar {
-    padding-top: 5px; /* Reduce the top padding */
-    padding-bottom: 10px; /* Reduce the bottom padding */
-    height: fit-content ;/* Set a specific height, adjust as needed */
+    padding-top: 5px; 
+    padding-bottom: 10px; 
+    height: fit-content ;
+}
+.snack-bar-success {
+  background-color: #4CAF50; 
+  color: white;
+}
+
+.snack-bar-error {
+  background-color: #F44336; 
+  color: white;
 }

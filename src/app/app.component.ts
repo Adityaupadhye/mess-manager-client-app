@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { SharedMaterialComponentsModule } from './shared-material-components/shared-material-components.module';
-import { LS_USERS_LAST_SYNC_TIME_KEY, Role } from './constants';
+import { LS_USERS_LAST_SYNC_TIME_KEY } from './constants';
 import { SyncService } from './services/sync/sync.service';
 import { User } from './data/user';
 
@@ -22,17 +20,19 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let _loggedInUser = localStorage.getItem('userDetails');
-    if(_loggedInUser != null) {
-      let loggedInUser = JSON.parse(_loggedInUser);
+    // let _loggedInUser = localStorage.getItem('userDetails');
+    // if(_loggedInUser != null) {
+    //   let loggedInUser = JSON.parse(_loggedInUser);
 
-      if(loggedInUser.role == Role.ADMIN) {
-        this._checkUsersSyncState(loggedInUser);
-        setInterval(() => {
-          this.syncService.syncLogEntries();
-        }, 30000);
-      }
-    }
+    //   if(loggedInUser.role == Role.ADMIN) {
+    //     this._checkUsersSyncState(loggedInUser);
+    //     setInterval(() => {
+    //       this.syncService.syncLogEntries();
+    //     }, 30000);
+    //   }
+    // }
+    console.log('app init');
+    this.syncService.fetchActiveRebates();
     
   }
 

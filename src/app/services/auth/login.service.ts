@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { API_BASE_URL, INDEXED_DB_USERS_STORE_NAME } from '../../constants';
 import { Router } from '@angular/router';
 import { IndexDbServiceService } from '../localdb/index-db-service.service';
@@ -23,6 +22,11 @@ export class LoginService {
     private idbService: IndexDbServiceService
   ) { }
   private isAuthenticated = false; 
+
+  getCurrentUser() {
+    let userDetailsItem = localStorage.getItem('userDetails');
+    return userDetailsItem != null ? JSON.parse(userDetailsItem) : null;
+  }
 
   login(username: string, password: string) {
     const body = { username, password }; // Adjust the payload as per your API

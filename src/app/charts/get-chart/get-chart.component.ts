@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ChartOptions, ChartConfiguration ,Chart, Plugin, TooltipItem } from 'chart.js';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { ChartOptions, ChartConfiguration, Chart, Plugin, TooltipItem } from 'chart.js';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_BASE_URL } from '../../constants';
-import { ChangeDetectorRef } from '@angular/core';
+import { BaseChartDirective } from 'ng2-charts';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-get-chart',
@@ -12,33 +13,216 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./get-chart.component.css']
 })
 export class GetChartComponent implements OnInit {
-  public weeklyData: any;
   public dates: any;
   public dayOfWeekArray: any;
-  public checkPieAttendenceData: any;
-  public checkPieWastageData: any;
   public loadingForPieAttendence: boolean = true;
   public loadingForPieWastage: boolean = true;
+  public loadingForLineWastage: boolean = true;
+  public loadingForLineWastageMonthly: boolean = true;
+  public loadingForBarMonthlyAttendence: boolean = true;
+  public checkPieAttendenceData: any;
+  public checkPieWastageData: any;
+  public weeklyData: any;
+  public weeklyWasteData: any;
+  public monthlyAttendenceData: any;
+  public monthlyWastageData: any;
+
   public test: any;
+  // public dateWiseData: Date = new// Access response body here Date(); // for displaying yesterday's data
+  public displayYesterdayDate: Date; // Declare without initializing here
+  public dateSelected: any; //Selected date for daily data 
+  public displayDate: Date | null = null; // Date to display, null by default
+
+  lineChartData: any = {
+    labels: [],
+    datasets: [
+      { label: 'Breakfast', data: [] },
+      { label: 'Lunch', data: [] },
+      { label: 'Snacks', data: [] },
+      { label: 'Dinner', data: [] }
+    ]
+  };
+  
+
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
-    this.getWeeklyData(); // Call your existing method (if applicable)
+    this.getWeeklyData(); //last 7 days Attendence
     const dateToSend = this.getYesterdayDate();  // Get yesterday's date
+    this.dateSelected = dateToSend;
+    this.displayYesterdayDate = dateToSend;
     this.getDataWithDate(dateToSend);
-    console.log(dateToSend); // Send yesterday's date
     this.getYesterdayWastageData(dateToSend);
+    this.getWeeklyWastageData();
+    this.getMonthlyFoodWastageData();
+    this.getMOnthlyStudentAttendencd();
 
+  }
+
+  //========================= GET MOnthly AVG Student Attendence ==========================
+  getMOnthlyStudentAttendencd(){
+    this.http.get(API_BASE_URL + 'monthly/', {
+      observe: 'response'
+    }).subscribe({
+      next: (response: any) => {
+        this.loadingForBarMonthlyAttendence = false;
+        if(response.body && response.body.data){
+          const monthlyAttendenceData = response.body.data;
+          console.log("data",monthlyAttendenceData);
+
+          const labels_dates = monthlyAttendenceData.map((item: any) => item.date.split('-')[2]);
+          const avgAttendees = monthlyAttendenceData.map((item: any) => item.average);
+
+            // Check processed data for labels and dataset values
+        console.log("Labels (Dates):", labels_dates);
+        console.log("Average Attendance Data:", avgAttendees);
+          this.secondBarChartData = {
+            labels : labels_dates,
+            datasets: [
+              {
+                data: avgAttendees,
+                label: 'Mean Student attendee count',
+                backgroundColor: '#FF6384',
+              }
+            ]
+          };
+          this.chart?.update();
+        } else {
+          console.error('Unexpected response:', response.body);
+        }
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        console.error("Monthly Avg Attendees Error: ", error);
+        this.loadingForBarMonthlyAttendence = false;
+      } 
+    });
+  }
+
+  //========================== GET Mean Food Wastage across different meal categories (Monthly) ========
+  getMonthlyFoodWastageData() { 
+    this.http.get(API_BASE_URL + 'menu/foodmenu/monthly_avg_food_wastage/' , {
+      observe: 'response'
+    }).subscribe({
+      next: (response: any) => {
+        this.loadingForLineWastageMonthly = false;
+        if (response.body && response.body.data) {
+          // this.monthlyWastageData = response.body.data;
+          const monthlyWastageData = response.body.data;
+          // console.log(this.monthlyWastageData)
+
+        // Process the data to extract dates and avg_wastage
+        const dates = monthlyWastageData.map((entry: any) => entry.date.split('-')[2]); 
+        const avgWastageValues = monthlyWastageData.map((entry: any) => entry.avg_wastage);
+
+        // Update chart data
+        this.secondLineChartData.labels = dates;
+        this.secondLineChartData.datasets[0].data = avgWastageValues;
+
+        // Trigger chart update
+        this.chart?.update();
+        }
+      },
+      error: (error: any) => {
+        console.error('Error:', error);
+        this.loadingForLineWastageMonthly = false;
+      }
+    });
+  }
+
+
+  //========================== GET LAST 7 DAYS (WEEKLY) DATA ===========================================
+  getWeeklyWastageData() {
     
+    this.http.get(API_BASE_URL + 'menu/foodmenu/get_weekly/', {
+      observe: 'response'
+    }).subscribe({
+      next: (response: any) => {
+        this.loadingForLineWastage = false;
+        if (response.body && response.body.data) {
+            this.weeklyWasteData = response.body.data;
+            const foodWastageByCategory: { [key: string]: number[] } = {
+              'breakfast': new Array(7).fill(0),
+              'lunch': new Array(7).fill(0),
+              'snacks': new Array(7).fill(0),
+              'dinner': new Array(7).fill(0)
+            };
+    
+    
+            // Generate labels with day and date
+            const labels: string[][] = [];
+            const today = new Date();
+            for (let i = 0; i < 7; i++) {
+              const date = new Date(today);
+              date.setDate(today.getDate() - (6 - i));  // Adjust for past 7 days
+              const dayName = date.toLocaleString('en-us', { weekday: 'short' });
+              const formattedDate = date.toISOString().split('T')[0];
+              labels.push([formattedDate, dayName]); // Two-line label as an array of strings
+            }
+            this.lineChartData.labels = labels;
+
+          // Populate wastage data
+          for (const [date, entries] of Object.entries(this.weeklyWasteData)) {
+            const dateObj = new Date(date);
+            const weekdayIndex = (dateObj.getDay() + 6) % 7;
+
+            if (Array.isArray(entries)) {
+              entries.forEach((entry: any) => {
+                const category = entry.food_category as keyof typeof foodWastageByCategory;
+                if (foodWastageByCategory[category]) {
+                  foodWastageByCategory[category][weekdayIndex] = entry.food_wastage;
+                }
+              });
+            }
+          }
+    
+            // Populate line chart datasets
+            this.lineChartData.datasets[0].data = foodWastageByCategory['breakfast'];
+            this.lineChartData.datasets[1].data = foodWastageByCategory['lunch'];
+            this.lineChartData.datasets[2].data = foodWastageByCategory['snacks'];
+            this.lineChartData.datasets[3].data = foodWastageByCategory['dinner'];
+    
+    
+          }else {
+            console.error('Unexpected response structure:', response.body);
+          }
+          this.cdr.detectChanges();
+        },
+        error: (error: any) => {
+          console.error('Error occurred:', error);
+          this.loadingForLineWastage = false;
+        }
+      });
+    }
+
+
+
+
+  //========================== fetch the selected date (date-wise data) ================================
+  fetchSelectedDate() {
+    const selectedDate = this.dateSelected ? new Date(this.dateSelected) : this.getYesterdayDate();
+    this.displayDate = selectedDate;
+    this.getDataWithDate(selectedDate);
+    this.getYesterdayWastageData(selectedDate);
+    // console.log("Date used for data:", this.displayDate);
+  }
+
+
+  onDateChange() {
+
+    console.log('date change: ', this.dateSelected, typeof (this.dateSelected));
+
   }
 
 
   //=========================== Food Watage last day (doughnut) ==========================
 
   getYesterdayWastageData(date: Date) {
+    this.doughnutChartData = null;
+
     // Format the date to YYYY-MM-DD
     const formattedDateWastage = this.formateDateWaste(date);
-
     let params = new HttpParams().set('date', formattedDateWastage);
 
     // API CALL
@@ -48,14 +232,17 @@ export class GetChartComponent implements OnInit {
     }).subscribe({
       next: (response: any) => {
         this.loadingForPieWastage = false;
-        if (response.body && response.body.data) {
+        
+        if (response.body && response.body.data && response.body.data.length > 0) {
           const checkPieWastageData = response.body.data; //Assigning the results
+          
           //Preapre labels
           const labels: string[] = [];
-          const datasetWithMenuAndWastage: {food_wastage: number, menu: string[]}[] = [];
+          const datasetWithMenuAndWastage: { food_wastage: number, menu: string[] }[] = [];
+
           checkPieWastageData.forEach((item: any) => {
             //Extract food_category as labels
-              labels.push(item.food_category);
+            labels.push(item.food_category);
             //Extreact food wastage and menu
             datasetWithMenuAndWastage.push({
               food_wastage: item.food_wastage,
@@ -73,9 +260,11 @@ export class GetChartComponent implements OnInit {
               }
             ]
           };
-
-          this.cdr.detectChanges();
+        } else {
+          // If no data, display a "No Data" message
+          console.warn('No data available for the selected date');
         }
+        this.cdr.detectChanges();
       },
       error: (error: any) => {
         console.error('Error occurred:', error);
@@ -85,10 +274,7 @@ export class GetChartComponent implements OnInit {
     });
   }
 
-  // Function to caps
-  //  capitalize(s: string): string {
-  //   return s.charAt(0).toUpperCase() + s.slice(1);
-  // }
+
 
   //generatw colors
   generateBackgroundColor(count: number): string[] {
@@ -96,7 +282,7 @@ export class GetChartComponent implements OnInit {
     return colors.slice(0, count); // Use only the required number of colors
   }
 
-  // Helper method to format date to YYYY-MM-DD
+  // Helper method to format date to YYYY-MM-DD for wastage API
   formateDateWaste(date: Date): string {
     const day = ('0' + date.getDate()).slice(-2); // Pad single digits with zero
     const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-indexed
@@ -109,12 +295,14 @@ export class GetChartComponent implements OnInit {
   getYesterdayDate(): Date {
     const today = new Date();  // Get today's date
     const yesterday = new Date(today);  // Create a copy of today's date
-    yesterday.setDate(today.getDate() - 5);  // Subtract one day
+    yesterday.setDate(today.getDate() - 1);  // Subtract one day
+    // console.log("Yesterday: " + yesterday)
     return yesterday;  // Return yesterday's date
   }
 
-  //============================Send Date ==================================
+  //============================Send Date for Pie chart to get DATA ==================================
   getDataWithDate(date: Date) {
+    this.pieChartData = null;
     // Format the date to DD-MM-YYYY
     const formattedDate = this.formatDate(date);
 
@@ -131,23 +319,65 @@ export class GetChartComponent implements OnInit {
         if (response.body && response.body.result) {
           this.checkPieAttendenceData = response.body.result;  // Assign the result to checkPieAttendenceData
 
-          // Update pieChartDatasets based on the received data
-          this.pieChartDatasets[0].data = [
-            this.checkPieAttendenceData.breakfast,
-            this.checkPieAttendenceData.lunch,
-            this.checkPieAttendenceData.snacks,
-            this.checkPieAttendenceData.dinner
-          ];
+          //check is response is empty or not
+          if (Object.keys(this.checkPieAttendenceData).length == 0) {
+            this.pieChartData = null;
+          } else {
+            // Initialize arrays for labels and data
+            const labels: string[] = [];
+            const data: number[] = [];
+            for (const [key, value] of Object.entries(this.checkPieAttendenceData) as [string, number][]) {
+              labels.push(key);      // Push each key (breakfast, lunch, etc.) to labels
+              data.push(value);      // Push each value to data array
+            }
+            this.pieChartData = {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'Pie Chart',
+                  data: data,
+                  backgroundColor: this.generateBackgroundColorPieChart(labels.length),
+                  hoverBackgroundColor: this.generateHoverBackgroundColorPieChart(labels.length),
+                  borderWidth: 1
+                }
+              ]
+            };
+          }
           this.cdr.detectChanges();
         } else {
           console.error('Unexpected response structure:', response.body);
+          this.pieChartData = null;
         }
       },
       error: (error: any) => {
         console.error('Error occurred:', error);
+        this.loadingForPieAttendence = false;
       }
     });
   }
+
+  //generate colors
+  generateBackgroundColorPieChart(count: number): string[] {
+    const colors = [
+      '#007bff', // Vibrant Blue
+      '#ffc107', // Bright Amber
+      '#dc3545', // Bold Red
+      '#fd7e14'  // Lively Orange
+    ];
+    return colors.slice(0, count); // Use only the required number of colors
+  }
+
+  //gen hover colors
+  generateHoverBackgroundColorPieChart(count: number): string[] {
+    const colors = [
+      '#66b3ff', // Lighter Blue
+      '#ffda66', // Lighter Amber
+      '#f56c73', // Lighter Red
+      '#ffae66'  // Lighter Orange
+    ];
+    return colors.slice(0, count); // Use only the required number of colors
+  }
+
 
   // Helper method to format date to DD-MM-YYYY
   formatDate(date: Date): string {
@@ -158,11 +388,7 @@ export class GetChartComponent implements OnInit {
   }
 
 
-
-
-  //============================SEND DATE END =============================
-
-  //=============================Convert Date to Day -------------------------
+  //============================= GET DATA OF LAST 7 DAYS  (Attendence)=================================
 
 
 
@@ -236,6 +462,7 @@ export class GetChartComponent implements OnInit {
 
 
   // =================================================== PIE ===========================================================
+  public pieChartData: any = null;
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
     // maintainAspectRatio: true,
@@ -258,24 +485,24 @@ export class GetChartComponent implements OnInit {
     }
   };
 
-  public pieChartLabels: string[] = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
-  public pieChartDatasets = [
-    {
-      data: [0, 0, 0, 0],
-      backgroundColor: [
-        '#007bff', // Vibrant Blue
-        '#ffc107', // Bright Amber
-        '#dc3545', // Bold Red
-        '#fd7e14'  // Lively Orange
-      ],
-      hoverBackgroundColor: [
-        '#66b3ff', // Lighter Blue
-        '#ffda66', // Lighter Amber
-        '#f56c73', // Lighter Red
-        '#ffae66'  // Lighter Orange
-      ]
-    }
-  ];
+  // public pieChartLabels: string[] = ['Breakfast', 'Lunch', 'Snacks', 'Dinner'];
+  //   public pieChartDatasets = [
+  //   {
+  //     data: [0, 0, 0, 0],
+  //     backgroundColor: [
+  //       '#007bff', // Vibrant Blue
+  //       '#ffc107', // Bright Amber
+  //       '#dc3545', // Bold Red
+  //       '#fd7e14'  // Lively Orange
+  //     ],
+  //     hoverBackgroundColor: [
+  //       '#66b3ff', // Lighter Blue
+  //       '#ffda66', // Lighter Amber
+  //       '#f56c73', // Lighter Red
+  //       '#ffae66'  // Lighter Orange
+  //     ]
+  //   }
+  // ];
 
   public pieChartLegend = true;
   public pieChartPlugins = [];
@@ -295,9 +522,9 @@ export class GetChartComponent implements OnInit {
         align: 'center',
         labels: {
           font: {
-            size: 19, 
+            size: 19,
           },
-          padding: 10, 
+          padding: 10,
           boxWidth: 35,
         }
       },
@@ -308,13 +535,13 @@ export class GetChartComponent implements OnInit {
           label: (tooltipItem: TooltipItem<'doughnut'>) => {
             const dataset = tooltipItem.dataset; // Current dataset
             const dataIndex = tooltipItem.dataIndex; // Index of current item in dataset
-  
+
             // Retrieve the food_wastage value
             const foodWastage = dataset.data[dataIndex] as number;
-  
+
             // Retrieve the menu from your API response
             const menu = this.doughnutChartData.datasets[0].menu[dataIndex]; // Access the menu for the corresponding data point
-  
+
             // Format the tooltip label
             return `Food Wastage: ${foodWastage} kg, Menu: ${menu.join(', ')}`;
           }
@@ -326,10 +553,10 @@ export class GetChartComponent implements OnInit {
           size: 14
         }
       },
-      
+
     }
   };
- 
+
 
   // ==================================================== Bar chart ===========================================================
   public barChartLegend = true;
@@ -390,53 +617,33 @@ export class GetChartComponent implements OnInit {
             family: 'Arial',
             weight: 'bold'
           }
+        },
+        title: {
+          display: true,
+          text: 'No. of Students', // Y-axis title
+          font: {
+            size: 18,
+            family: 'Arial',
+            weight: 'bold',
+          },
+          color: 'black',
         }
       }
     }
   };
 
   // ==================================================== Line chart ===========================================================
+  // public lineChartData: ChartConfiguration<'line'>['data'] = {
+  //   labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+  //   datasets: [
+  //     { data: [], label: 'Breakfast', borderColor: 'green', tension: 0.5 },
+  //     { data: [], label: 'Lunch', borderColor: 'orange', tension: 0.5 },
+  //     { data: [], label: 'Snacks', borderColor: 'blue', tension: 0.5 },
+  //     { data: [], label: 'Dinner', borderColor: 'purple', tension: 0.5 }
+  //   ]
+  // };
 
-
-  public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: [
-      'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-    ],
-    datasets: [
-      {
-        data: [50, 40, 60, 70, 80, 30, 90],
-        label: 'Breakfast',
-        tension: 0.5,
-        borderColor: 'green',
-        backgroundColor: 'transparent', // No fill
-        fill: false
-      },
-      {
-        data: [70, 55, 75, 65, 45, 85, 95],
-        label: 'Lunch',
-        tension: 0.5,
-        borderColor: 'orange',
-        backgroundColor: 'transparent', // No fill
-        fill: false
-      },
-      {
-        data: [30, 50, 70, 90, 60, 40, 20],
-        label: 'Snacks',
-        tension: 0.5,
-        borderColor: 'blue',
-        backgroundColor: 'transparent', // No fill
-        fill: false
-      },
-      {
-        data: [80, 60, 40, 20, 50, 70, 100],
-        label: 'Dinner',
-        tension: 0.5,
-        borderColor: 'purple',
-        backgroundColor: 'transparent', // No fill
-        fill: false
-      }
-    ]
-  };
+  public lineChartLegend = true;
 
 
   public lineChartOptions: ChartOptions<'line'> = {
@@ -487,11 +694,20 @@ export class GetChartComponent implements OnInit {
             family: 'Arial',
             weight: 'bold'
           }
+        },
+        title: {
+          display: true,
+          text: 'Wastage in Kgs', // Y-axis title
+          font: {
+            size: 18,
+            family: 'Arial',
+            weight: 'bold',
+          },
+          color: 'black',
         }
       }
     }
   };
-  public lineChartLegend = true;
 
   //============================================== Second Bar CHart ======================================
 
@@ -500,7 +716,7 @@ export class GetChartComponent implements OnInit {
     labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()), // Generate labels 1-31
     datasets: [
       {
-        data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100)), // Random data for mean attendance
+        data: [], // Random data for mean attendance
         label: 'Mean Attendance',
         backgroundColor: '#FF6384', // Customize the color
       }
@@ -582,25 +798,22 @@ export class GetChartComponent implements OnInit {
 
   // Line Chart Data (with Dates on X-axis)
   public secondLineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()), // Empty labels for X-axis (1-31 dates)
+    labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()),
     datasets: [
       {
-        data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100)), // Random data for avg food wastage
+        data: [],
         label: 'Mean Wastage',
         tension: 0.5,
         borderColor: 'green',
         backgroundColor: 'transparent',
         fill: false
       }
-
-
     ]
   };
-
+  
   // Line Chart Options (with "Dates" label)
   public secondLineChartOptions: ChartOptions<'line'> = {
     responsive: true,
-    // maintainAspectRatio: true,
     plugins: {
       legend: {
         labels: {
@@ -633,7 +846,6 @@ export class GetChartComponent implements OnInit {
             family: 'Arial',
             weight: 'bold',
           },
-
         },
         title: {
           display: true,
@@ -668,7 +880,6 @@ export class GetChartComponent implements OnInit {
       }
     }
   };
-
   public secondlineChartLegend = true;
 
 
