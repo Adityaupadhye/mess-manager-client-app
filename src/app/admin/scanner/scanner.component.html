@@ -24,7 +24,7 @@
       <div class="row my-2 justify-content-around" >
           <button
             class="col-md-5 p-2 btn btn-outline-light mt-3"
-            style="font-weight: 800;"
+            style="font-weight: 500;"
             [innerText]="
               isScanningEnabled ? 'Turn Off Scanner' : 'Turn On Scanner'
             "
@@ -32,7 +32,7 @@
           ></button>
           <button
             class="col-md-5 p-2 btn btn-outline-light mt-3"
-            style="font-weight: 800;"
+            style="font-weight: 500;"
             (click)="resetScanner()"
           >
             Reset Scanner
@@ -42,7 +42,7 @@
 
       <div class="row mt-4">
         <div class="col">
-          <p class="text-white">Select Camera</p>
+          <p class="text-white fs-4">Select Camera</p>
           <mat-form-field class="w-100">
             <!-- <mat-label>Select Camera</mat-label> -->
             <mat-select
@@ -83,17 +83,34 @@
                 </div>
           </div>
       <div class="p-4 text-white">
-        <div *ngIf="!_scanningError">
-          <h2>{{ studentData.name }}</h2>
-          <h3>{{ studentData.roll_no }}</h3>
-          <h3>{{ studentData.hostel }}</h3>
+        <div class="row p-1" *ngIf="_hasScanningStarted && !_scanningError">
+          <div class="col-md-6">
+            <div>
+              <label for="stud-name">NAME</label>
+              <h2 id="stud-name">{{ studentData.name }}</h2> <br>
+    
+              <label for="roll_no">ROLL NUMBER</label>
+              <h3 id="roll_no">{{ studentData.roll_no }}</h3> <br>
+    
+              <label for="hostel_no">HOSTEL</label>
+              <h3 id="hostel_no">{{ studentData.hostel }}</h3>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <img src="./assets/user.png" alt="user image">
+          </div>
         </div>
-        <h1
-          *ngIf="isUserValid == false && studentData.hostel != ''"
-          class="text-danger"
-        >
-          NOT ALLOWED
-        </h1>
+        <div *ngIf="userValidityError" class="alert alert-danger m-2">
+          <h4
+            *ngIf="isUserValid == false && studentData.hostel != ''"
+            class="text"
+          >
+            NOT ALLOWED
+          </h4>
+          <div>
+            {{userValidityError}}
+          </div>
+        </div>
         <h2 *ngIf="_scanningError">Invalid QR Code</h2>
       </div>
     </div>
@@ -104,7 +121,7 @@
 
 <!-- input form modal -->
 <div class="modal fade" #exampleModal id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-  (shown.bs.modal)="fetchMenu()"
+  (shown.bs.modal)="onModalOpen()"
   (hidden.bs.modal)="onModalHide()"
 >
 <div class="modal-dialog modal-dialog-centered">

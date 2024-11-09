@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { API_BASE_URL } from '../../constants';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 
 interface UserDetails {
@@ -45,7 +45,7 @@ export class RebateComponent {
   }
 
   getActiveRebates() {
-    this.http.get(API_BASE_URL+ 'rebates/?status=inactive', {
+    this.http.get(API_BASE_URL+ 'rebates/?status=active', {
       observe: 'response'
     }).subscribe({
       next: (response: any) => {

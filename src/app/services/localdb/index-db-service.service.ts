@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Key, NgxIndexedDBService } from 'ngx-indexed-db';
 
 @Injectable({
@@ -29,6 +29,10 @@ export class IndexDbServiceService {
 
   getRecordByKey(storeName: string, key: any) {
     return this.dbService.getByKey(storeName, key)
+  }
+
+  getRecordByIndex(storeName: string, indexName: string, key: any) {
+    return this.dbService.getAllByIndex(storeName, indexName, key)
   }
 
   deleteRecords(storeName: string, keys: Key[]) {

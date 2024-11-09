@@ -14,7 +14,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
         <li class="nav-item m-2">
           <a [ngClass]="{'active': this.router.url.includes('scan')}" class="nav-link font-weight-bold" aria-current="page" routerLink="/admin/scan">Home</a>
         </li>
@@ -30,7 +30,7 @@
         <li class="nav-item m-2">
           <button
             type="button"
-            class="btn btn-lg btn-outline-dark font-weight-bold"
+            class="btn btn-outline-dark font-weight-bold"
             style="font-weight: 500;"
             data-bs-toggle="modal" data-bs-target="#exampleModal"
             (click)="addMenu()"
@@ -42,7 +42,7 @@
         <li class="nav-item m-2">
           <button
             type="button"
-            class="btn btn-lg btn-outline-dark font-weight-bold"
+            class="btn btn-outline-dark font-weight-bold"
             style="font-weight: 500;"
             data-bs-toggle="modal" data-bs-target="#exampleModal"
             (click)="this.menuService.isAddingMenu = false; this.menuService.isAddingWastage = true;"
@@ -53,7 +53,7 @@
         </li>
         <li class="nav-item m-2">
           <button
-            class="btn btn-lg btn-outline-success"
+            class="btn btn-outline-success"
             style="font-weight: 500;"
             *ngIf="isScanPage()"
             (click)="syncdata()"
@@ -63,7 +63,7 @@
         </li>
         <li class="nav-item m-2">
           <button
-            class="btn btn-lg btn-outline-danger"
+            class="btn btn-outline-danger"
             style="font-weight: 500;"
             (click)="loginService.logout()"
           >
