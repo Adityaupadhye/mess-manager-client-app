@@ -8,14 +8,13 @@
     margin: 0;
     padding: 0;
   }
-  
-  /* Alert and Card Styles */
+
   .custom-card-size {
-    width: 90%; /* Responsive width */
+    width: 90%; 
     max-width: 600px; 
     padding: 20px;
     margin: 10px 0;
-    height: auto; /* Allows height to expand based on content */
+    height: auto;
   }
   
   .alert {
@@ -52,8 +51,7 @@
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
-  
-  /* Table Styles */
+
   .table {
     color: white;
     margin: 0 auto;
@@ -81,18 +79,17 @@
     font-size: 1rem;
   }
   
-  /* Text Center and Header */
+ 
   .text-center {
     font-family: 'Roboto', sans-serif;
     font-size: 1.5rem;
     color: #ffc107;
   }
   
-  /* Responsive Design Adjustments */
   @media (max-width: 768px) {
     .custom-card-size {
       padding: 15px;
-      width: 100%; /* Use full width on mobile */
+      width: 100%; 
     }
   
     .alert {
@@ -118,28 +115,26 @@
   }
   
 
-  /* Add extra spacing below hints and above "Reason" field */
 .date-field {
   margin-bottom: 1rem;
 }
 
 .reason-field {
-  margin-top: 1.5rem; /* Ensure extra space between date field hints and Reason field */
+  margin-top: 1.5rem; 
 }
 
 h1.display-4 {
-  font-size: 2rem; /* Smaller font for mobile */
+  font-size: 2rem; 
   text-align: center;
 }
 
 @media (max-width: 576px) {
   h1.display-4 {
-    font-size: 1.5rem; /* Further reduce font-size on smaller screens */
-    margin-top: 10px; /* Adjust top margin if needed */
+    font-size: 1.5rem; 
+    margin-top: 10px; 
   }
 }
 
-/* Mobile-specific styling */
 @media (max-width: 576px) {
   .container-fluid {
     padding: 1rem;
@@ -149,7 +144,6 @@ h1.display-4 {
     font-size: 0.95rem;
   }
 
-  /* Adjust font-size and padding for better readability on small screens */
   .alert, .card {
     font-size: 1.1rem;
   }

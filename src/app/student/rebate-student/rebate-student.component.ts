@@ -74,12 +74,10 @@ export class RebateStudentComponent implements OnInit {
   }
 
 
-  // Triggered when the start date is selected
   onStartDateChange(event: MatDatepickerInputEvent<Date>) {
     this.calculateDuration();
   }
 
-  // Triggered when the end date is selected
   onEndDateChange(event: MatDatepickerInputEvent<Date>) {
     this.calculateDuration();
   }

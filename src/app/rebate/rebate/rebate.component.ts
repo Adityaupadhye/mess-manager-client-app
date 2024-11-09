@@ -93,8 +93,8 @@ export class RebateComponent {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0'); // Two-digit day
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const month = monthNames[today.getMonth()]; // Month abbreviation
-    const year = today.getFullYear(); // Full year
+    const month = monthNames[today.getMonth()]; 
+    const year = today.getFullYear(); 
   
     this.todayDate= `${day}-${month}-${year}`; // Format as dd-mmm-yyyy
   }

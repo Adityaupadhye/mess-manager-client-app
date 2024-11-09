@@ -40,7 +40,7 @@ export class StudentHomeComponent {
   hostel: string = '';
   role: string = '';
 
-  studentData: any = {}; // Initialize an empty object
+  studentData: any = {}; 
   studentJsonString: string = '';
   ngOnInit() {
     const savedUserDetails = localStorage.getItem('userDetails');
@@ -52,12 +52,11 @@ if (savedUserDetails) {
   this.role = userDetails['role']
 }
 
-    // Fetch student data from your backend API or database
     this.studentData = {
-      name: this.name, //"Mohammad Aasim"
-      roll_no: this.roll_no,      //"24M2118"
-      hostel: this.hostel,    //"H17"
-      role: this.role         //"2112",                
+      name: this.name,
+      hostel: this.hostel,    
+      roll_no: this.roll_no,    
+      role: this.role                      
     };
     this.studentJsonString = JSON.stringify(this.studentData);
   }
