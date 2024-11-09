@@ -56,6 +56,10 @@ export const routes: Routes = [
         path: 'admin/rebate',
         component : RebateComponent,
         canActivate: [adminauthGuard]
+    },
+    {
+        path: '**',
+        redirectTo: 'auth/login'
     }
 
 ];
