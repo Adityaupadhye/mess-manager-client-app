@@ -3,6 +3,7 @@ import { ChartOptions, ChartConfiguration, Chart, Plugin, TooltipItem } from 'ch
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { API_BASE_URL } from '../../constants';
 import { BaseChartDirective } from 'ng2-charts';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-get-chart',
@@ -12,16 +13,18 @@ import { BaseChartDirective } from 'ng2-charts';
   styleUrls: ['./get-chart.component.css']
 })
 export class GetChartComponent implements OnInit {
-  public weeklyData: any;
   public dates: any;
   public dayOfWeekArray: any;
-  public checkPieAttendenceData: any;
-  public checkPieWastageData: any;
   public loadingForPieAttendence: boolean = true;
   public loadingForPieWastage: boolean = true;
   public loadingForLineWastage: boolean = true;
   public loadingForLineWastageMonthly: boolean = true;
+  public loadingForBarMonthlyAttendence: boolean = true;
+  public checkPieAttendenceData: any;
+  public checkPieWastageData: any;
+  public weeklyData: any;
   public weeklyWasteData: any;
+  public monthlyAttendenceData: any;
   public monthlyWastageData: any;
 
   public test: any;
@@ -53,11 +56,52 @@ export class GetChartComponent implements OnInit {
     this.getYesterdayWastageData(dateToSend);
     this.getWeeklyWastageData();
     this.getMonthlyFoodWastageData();
+    this.getMOnthlyStudentAttendencd();
 
   }
 
+  //========================= GET MOnthly AVG Student Attendence ==========================
+  getMOnthlyStudentAttendencd(){
+    this.http.get(API_BASE_URL + 'monthly/', {
+      observe: 'response'
+    }).subscribe({
+      next: (response: any) => {
+        this.loadingForBarMonthlyAttendence = false;
+        if(response.body && response.body.data){
+          const monthlyAttendenceData = response.body.data;
+          console.log("data",monthlyAttendenceData);
+
+          const labels_dates = monthlyAttendenceData.map((item: any) => item.date.split('-')[2]);
+          const avgAttendees = monthlyAttendenceData.map((item: any) => item.average);
+
+            // Check processed data for labels and dataset values
+        console.log("Labels (Dates):", labels_dates);
+        console.log("Average Attendance Data:", avgAttendees);
+          this.secondBarChartData = {
+            labels : labels_dates,
+            datasets: [
+              {
+                data: avgAttendees,
+                label: 'Mean Student attendee count',
+                backgroundColor: '#FF6384',
+              }
+            ]
+          };
+          this.chart?.update();
+        } else {
+          console.error('Unexpected response:', response.body);
+        }
+        this.cdr.detectChanges();
+      },
+      error: (error: any) => {
+        console.error("Monthly Avg Attendees Error: ", error);
+        this.loadingForBarMonthlyAttendence = false;
+      } 
+    });
+  }
+
   //========================== GET Mean Food Wastage across different meal categories (Monthly) ========
-  getMonthlyFoodWastageData() { //monthly/
+  getMonthlyFoodWastageData() { 
     this.http.get(API_BASE_URL + 'menu/foodmenu/monthly_avg_food_wastage/' , {
       observe: 'response'
     }).subscribe({
@@ -66,7 +110,7 @@ export class GetChartComponent implements OnInit {
         if (response.body && response.body.data) {
           // this.monthlyWastageData = response.body.data;
           const monthlyWastageData = response.body.data;
-          console.log(this.monthlyWastageData)
+          // console.log(this.monthlyWastageData)
 
         // Process the data to extract dates and avg_wastage
         const dates = monthlyWastageData.map((entry: any) => entry.date.split('-')[2]); 
@@ -252,7 +296,7 @@ export class GetChartComponent implements OnInit {
     const today = new Date();  // Get today's date
     const yesterday = new Date(today);  // Create a copy of today's date
     yesterday.setDate(today.getDate() - 1);  // Subtract one day
-    console.log("Yesterday: " + yesterday)
+    // console.log("Yesterday: " + yesterday)
     return yesterday;  // Return yesterday's date
   }
 
@@ -672,7 +716,7 @@ export class GetChartComponent implements OnInit {
     labels: Array.from({ length: 31 }, (_, i) => (i + 1).toString()), // Generate labels 1-31
     datasets: [
       {
-        data: Array.from({ length: 31 }, () => Math.floor(Math.random() * 100)), // Random data for mean attendance
+        data: [], // Random data for mean attendance
         label: 'Mean Attendance',
         backgroundColor: '#FF6384', // Customize the color
       }

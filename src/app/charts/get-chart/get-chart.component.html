@@ -141,14 +141,18 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
       <div class="card p-3">
-        <canvas
+        <div *ngIf="loadingForBarMonthlyAttendence">Loading...</div>
+        <canvas *ngIf="!loadingForBarMonthlyAttendence && secondBarChartData"
+        baseChart
           class="bar-chart"
-          baseChart
+          [type]="'bar'"
           [data]="secondBarChartData"
           [options]="secondBarChartOptions"
-          [type]="'bar'"
           style="display: block; margin: 0 auto"
         ></canvas>
+        <div *ngIf="!loadingForBarMonthlyAttendence && !secondBarChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
         <div class="text-center mt-3">
           <p>
             <b style="color: black"
