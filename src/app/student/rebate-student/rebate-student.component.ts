@@ -63,7 +63,7 @@ export class RebateStudentComponent implements OnInit {
 
       //check if start is valid?
       const minValidStartDate = new Date();
-      minValidStartDate.setDate(minValidStartDate.getDate() + 1);
+      minValidStartDate.setDate(minValidStartDate.getDate() + 2);
       this.isStartDateInvalid = start < minValidStartDate
 
       const timeDifference = end.getTime() - start.getTime();
