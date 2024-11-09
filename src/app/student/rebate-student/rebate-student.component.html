@@ -43,7 +43,7 @@
             Duration: {{ duration }} days
           </mat-hint>
           <mat-hint *ngIf="duration < 3 || duration > 15 || isStartDateInvalid" class="text-danger">
-            Invalid Duration, select again
+            Invalid Duration or Start Date
           </mat-hint>
           <mat-hint *ngIf="duration >= 3 && duration <= 15 && !isStartDateInvalid" class="text-success">
             Valid Duration
