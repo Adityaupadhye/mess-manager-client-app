@@ -16,3 +16,12 @@
     padding-bottom: 10px; 
     height: fit-content ;
 }
+.snack-bar-success {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.snack-bar-error {
+  background-color: #F44336; /* Red */
+  color: white;
+}
