@@ -134,67 +134,74 @@ export class GetChartComponent implements OnInit {
 
   //========================== GET LAST 7 DAYS (WEEKLY) DATA ===========================================
   getWeeklyWastageData() {
-    
     this.http.get(API_BASE_URL + 'menu/foodmenu/get_weekly/', {
-      observe: 'response'
+        observe: 'response'
     }).subscribe({
-      next: (response: any) => {
-        this.loadingForLineWastage = false;
-        if (response.body && response.body.data) {
-            this.weeklyWasteData = response.body.data;
-            const foodWastageByCategory: { [key: string]: number[] } = {
-              'breakfast': new Array(7).fill(0),
-              'lunch': new Array(7).fill(0),
-              'snacks': new Array(7).fill(0),
-              'dinner': new Array(7).fill(0)
-            };
-    
-    
-            // Generate labels with day and date
-            const labels: string[][] = [];
-            const today = new Date();
-            for (let i = 0; i < 7; i++) {
-              const date = new Date(today);
-              date.setDate(today.getDate() - (6 - i));  // Adjust for past 7 days
-              const dayName = date.toLocaleString('en-us', { weekday: 'short' });
-              const formattedDate = date.toISOString().split('T')[0];
-              labels.push([formattedDate, dayName]); // Two-line label as an array of strings
-            }
-            this.lineChartData.labels = labels;
+        next: (response: any) => {
+            this.loadingForLineWastage = false;
 
-          // Populate wastage data
-          for (const [date, entries] of Object.entries(this.weeklyWasteData)) {
-            const dateObj = new Date(date);
-            const weekdayIndex = (dateObj.getDay() + 6) % 7;
+            if (response.body && response.body.data) {
+                this.weeklyWasteData = response.body.data;
+                console.log("weekly wastage", this.weeklyWasteData);
 
-            if (Array.isArray(entries)) {
-              entries.forEach((entry: any) => {
-                const category = entry.food_category as keyof typeof foodWastageByCategory;
-                if (foodWastageByCategory[category]) {
-                  foodWastageByCategory[category][weekdayIndex] = entry.food_wastage;
+                // Initialize categories with default values
+                const foodWastageByCategory: { [key: string]: number[] } = {
+                    'breakfast': new Array(7).fill(0),
+                    'lunch': new Array(7).fill(0),
+                    'snacks': new Array(7).fill(0),
+                    'dinner': new Array(7).fill(0)
+                };
+
+                // Generate labels for the past 7 days
+                const labels: string[][] = [];
+                const today = new Date();
+                const dateMap: { [key: string]: number } = {}; // Map dates to their indices in the past 7 days
+
+                for (let i = 0; i < 7; i++) {
+                    const date = new Date(today);
+                    date.setDate(today.getDate() - i); // Calculate date for each of the last 7 days
+                    const dayName = date.toLocaleString('en-us', { weekday: 'short' });
+                    const formattedDate = date.toISOString().split('T')[0];
+
+                    labels.unshift([formattedDate, dayName]); // Add label to the beginning for correct order
+                    dateMap[formattedDate] = 6 - i; // Map the formatted date to the weekday index
                 }
-              });
+                this.lineChartData.labels = labels;
+
+                // Populate wastage data
+                for (const [date, entries] of Object.entries(this.weeklyWasteData)) {
+                    if (dateMap[date] !== undefined) {
+                        const weekdayIndex = dateMap[date];
+
+                        if (Array.isArray(entries)) {
+                            entries.forEach((entry: any) => {
+                                const category = entry.food_category as keyof typeof foodWastageByCategory;
+                                if (foodWastageByCategory[category]) {
+                                    foodWastageByCategory[category][weekdayIndex] = entry.food_wastage;
+                                }
+                            });
+                        }
+                    }
+                }
+
+                // Populate line chart datasets
+                this.lineChartData.datasets[0].data = foodWastageByCategory['breakfast'];
+                this.lineChartData.datasets[1].data = foodWastageByCategory['lunch'];
+                this.lineChartData.datasets[2].data = foodWastageByCategory['snacks'];
+                this.lineChartData.datasets[3].data = foodWastageByCategory['dinner'];
+            } else {
+                console.error('Unexpected response structure:', response.body);
             }
-          }
-    
-            // Populate line chart datasets
-            this.lineChartData.datasets[0].data = foodWastageByCategory['breakfast'];
-            this.lineChartData.datasets[1].data = foodWastageByCategory['lunch'];
-            this.lineChartData.datasets[2].data = foodWastageByCategory['snacks'];
-            this.lineChartData.datasets[3].data = foodWastageByCategory['dinner'];
-    
-    
-          }else {
-            console.error('Unexpected response structure:', response.body);
-          }
-          this.cdr.detectChanges();
+
+            this.cdr.detectChanges();
         },
         error: (error: any) => {
-          console.error('Error occurred:', error);
-          this.loadingForLineWastage = false;
+            console.error('Error occurred:', error);
+            this.loadingForLineWastage = false;
         }
-      });
-    }
+    });
+}
+
 
 
 
