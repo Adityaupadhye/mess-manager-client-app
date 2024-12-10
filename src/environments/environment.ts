@@ -1,4 +1,4 @@
 export const environment = {
     production: true,
-    apiBaseUrl: 'https://magpie.bodhi.cse.iitb.ac.in/mess/api/'
+    apiBaseUrl: 'https://demo.devworkz.xyz/mess/api/'
 };
