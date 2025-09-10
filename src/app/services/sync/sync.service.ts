@@ -107,6 +107,32 @@ export class SyncService {
 
   }
 
+  fetchLogEntriesForDate(date: string) {
+    this.http.get(`${API_BASE_URL}foodlogs/?date=${date}`)
+    .subscribe({
+      next: (response: any) => {
+        console.log('log entries for date: ', response);
+        for (const logEntry of response) {
+          let currentLogEntry: LogEntry = {
+            roll_no: logEntry.roll_no,
+            food_category: logEntry.food_category,
+            timestamp: new Date(logEntry.timestamp).getTime() / 1000, // convert to seconds
+            type: logEntry.type
+          };
+
+          // currentLogEntry.timestamp = new Date(logEntry.timestamp).getTime();
+          console.log('adding log entry: ', currentLogEntry);
+
+          // add to indexed db
+          this.idbService.addRecord(INDEXED_DB_LOG_ENTRY_STORE_NAME, currentLogEntry);
+        }
+      },
+      error: (err: any) => {
+        console.error('error in fetching log entries for date: ', err);
+      }
+    });
+  }
+
   private _filterOutDuplicateEntries(entries: LogEntry[]) {
     const map = new Map<string, LogEntry>();
 
@@ -165,6 +191,11 @@ export class SyncService {
     .subscribe({
       next: (value: number[]) => {
         console.log('after delete: ', value);
+
+        // fetch new logs
+        const currentDate = new Date().toISOString().split('T')[0];
+        console.log('fetching log entries for date: ', currentDate);
+        this.fetchLogEntriesForDate(currentDate);
       },
       error: (err: any) => {
         console.error('log entry bulk delete error: ', err);

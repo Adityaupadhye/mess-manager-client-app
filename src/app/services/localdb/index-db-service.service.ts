@@ -18,7 +18,7 @@ export class IndexDbServiceService {
         console.log('data added with key: ', key);
       },
       error: (error: any) => {
-        console.error('error in indexed db add: ', error);
+        console.error('error in indexed db add: ', error, error.target.error);
       }
     });
   }
