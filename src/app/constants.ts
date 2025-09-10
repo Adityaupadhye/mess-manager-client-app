@@ -17,6 +17,7 @@ export enum FoodCategory {
     LUNCH = "lunch",
     SNACKS = "snacks",
     DINNER = "dinner",
+    MILK = "milk"
     // NA = "NA"
 }
 

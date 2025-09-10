@@ -39,7 +39,8 @@ export class GetChartComponent implements OnInit {
       { label: 'Breakfast', data: [] },
       { label: 'Lunch', data: [] },
       { label: 'Snacks', data: [] },
-      { label: 'Dinner', data: [] }
+      { label: 'Dinner', data: [] },
+      { label: 'Milk', data: [] }
     ]
   };
   
@@ -409,15 +410,16 @@ export class GetChartComponent implements OnInit {
 
         //get all dates
         const dates = Object.keys(this.weeklyData);
-        const mealTypes: Array<'breakfast' | 'lunch' | 'snacks' | 'dinner'> = ['breakfast', 'lunch', 'snacks', 'dinner'];
+        const mealTypes: Array<'breakfast' | 'lunch' | 'snacks' | 'dinner' | 'milk'> = ['breakfast', 'lunch', 'snacks', 'dinner', 'milk'];
 
 
         //Initialize with zero
-        const datasets: { [key in 'breakfast' | 'lunch' | 'snacks' | 'dinner']: number[] } = {
+        const datasets: { [key in 'breakfast' | 'lunch' | 'snacks' | 'dinner' | 'milk']: number[] } = {
           breakfast: new Array(dates.length).fill(0),
           lunch: new Array(dates.length).fill(0),
           snacks: new Array(dates.length).fill(0),
-          dinner: new Array(dates.length).fill(0)
+          dinner: new Array(dates.length).fill(0),
+          milk: new Array(dates.length).fill(0)
         };
 
         const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -455,6 +457,9 @@ export class GetChartComponent implements OnInit {
             },
             {
               data: datasets.dinner, label: 'Dinner', backgroundColor: '#5752D1'
+            },
+            {
+              data: datasets.milk, label: 'Milk', backgroundColor: '#b7e0ddff'
             }
           ]
         };
