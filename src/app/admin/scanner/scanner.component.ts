@@ -201,6 +201,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
     } catch (error) {
       console.error('Error in parsing: ', error);
       this._scanningError = true;
+      this.toastr.error('Error in scanning. Please try again.');
     }
   }
 
@@ -226,6 +227,13 @@ export class ScannerComponent implements OnInit, AfterViewInit {
   private _playSound() {
     const audio = new Audio();
     audio.src = './assets/beep_once.mp3'; // Path to your audio file
+    audio.load();                   // Preload the audio file
+    audio.play();                   // Play the sound
+  }
+
+  private _playSoundError() {
+    const audio = new Audio();
+    audio.src = './assets/error-tone1.mp3'; // Path to your audio file
     audio.load();                   // Preload the audio file
     audio.play();                   // Play the sound
   }
@@ -263,6 +271,9 @@ export class ScannerComponent implements OnInit, AfterViewInit {
                     console.log('duplicate scannig detected');
                     this.isUserValid = false;
                     this.userValidityError = 'Already scanned for this meal today.';
+                    // show error toast
+                    this.toastr.error('Already scanned for this meal today.', `Error: ${userRollNo}`);
+                    this._playSoundError();
                     return;
                   }
                 }
@@ -273,6 +284,10 @@ export class ScannerComponent implements OnInit, AfterViewInit {
                 if(isRebateActive) {
                   this.isUserValid = false;
                   this.userValidityError = 'Your rebate is currently active.'
+
+                  // show error toast
+                  this.toastr.error('Your rebate is currently active.', `Error: ${userRollNo}`);
+                  this._playSoundError();
                   return;
                 }
 
@@ -280,6 +295,9 @@ export class ScannerComponent implements OnInit, AfterViewInit {
                 console.debug('adding log entry...');
                 this.userValidityError = '';
                 this.addLogEntry(parsedUserData, this.currentPersonType);
+
+                // show success toast
+                this.toastr.success('Take your meal!', `Success: ${userRollNo}`);
               }, 
               error: (err: any) => {
                 console.error('error in finding record by index: ', err);
@@ -289,6 +307,8 @@ export class ScannerComponent implements OnInit, AfterViewInit {
           }
           else {
             this.isUserValid = false;
+            this.toastr.error('User not registered');
+            this._playSoundError();
           }
 
         },
