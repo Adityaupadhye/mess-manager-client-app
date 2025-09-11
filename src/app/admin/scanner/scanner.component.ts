@@ -226,14 +226,14 @@ export class ScannerComponent implements OnInit, AfterViewInit {
 
   private _playSound() {
     const audio = new Audio();
-    audio.src = './assets/beep_once.mp3'; // Path to your audio file
+    audio.src = 'assets/beep_once.mp3'; // Path to your audio file
     audio.load();                   // Preload the audio file
     audio.play();                   // Play the sound
   }
 
   private _playSoundError() {
     const audio = new Audio();
-    audio.src = './assets/error-tone1.mp3'; // Path to your audio file
+    audio.src = 'assets/error-tone1.mp3'; // Path to your audio file
     audio.load();                   // Preload the audio file
     audio.play();                   // Play the sound
   }
