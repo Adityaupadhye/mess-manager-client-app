@@ -108,7 +108,7 @@ export class SyncService {
   }
 
   fetchLogEntriesForDate(date: string) {
-    this.http.get(`${API_BASE_URL}foodlogs/?date=${date}`)
+    this.http.get(`${API_BASE_URL}foodlogs/filter/?date=${date}`)
     .subscribe({
       next: (response: any) => {
         console.log('log entries for date: ', response);
