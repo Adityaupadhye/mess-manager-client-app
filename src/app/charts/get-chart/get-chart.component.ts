@@ -103,7 +103,7 @@ export class GetChartComponent implements OnInit {
 
   //========================== GET Mean Food Wastage across different meal categories (Monthly) ========
   getMonthlyFoodWastageData() { 
-    this.http.get(API_BASE_URL + 'menu/foodmenu/monthly_avg_food_wastage/' , {
+    this.http.get(API_BASE_URL + 'foodmenu/monthly_avg_food_wastage/' , {
       observe: 'response'
     }).subscribe({
       next: (response: any) => {
@@ -135,7 +135,7 @@ export class GetChartComponent implements OnInit {
 
   //========================== GET LAST 7 DAYS (WEEKLY) DATA ===========================================
   getWeeklyWastageData() {
-    this.http.get(API_BASE_URL + 'menu/foodmenu/get_weekly/', {
+    this.http.get(API_BASE_URL + 'foodmenu/get_weekly/', {
         observe: 'response'
     }).subscribe({
         next: (response: any) => {
@@ -234,7 +234,7 @@ export class GetChartComponent implements OnInit {
     let params = new HttpParams().set('date', formattedDateWastage);
 
     // API CALL
-    this.http.get(API_BASE_URL + 'menu/foodmenu/search_by_date/', {
+    this.http.get(API_BASE_URL + 'foodmenu/search_by_date/', {
       params,
       observe: 'response'
     }).subscribe({

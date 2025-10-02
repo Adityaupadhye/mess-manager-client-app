@@ -16,8 +16,8 @@ export class MenuService {
 
   get(id?: number) {
     const url = id
-      ? `${API_BASE_URL}menu/foodmenu/${id}/`
-      : `${API_BASE_URL}menu/foodmenu/`;
+      ? `${API_BASE_URL}foodmenu/${id}/`
+      : `${API_BASE_URL}foodmenu/`;
 
     return this.http.get(url, {
       observe: 'response'
@@ -26,22 +26,22 @@ export class MenuService {
 
 
   post(data: any) {
-    return this.http.post(API_BASE_URL+'menu/foodmenu/', data);
+    return this.http.post(API_BASE_URL+'foodmenu/', data);
   }
 
   put(data: any, id: number) {
-    return this.http.put(API_BASE_URL+'menu/foodmenu/'+id+'/', data);
+    return this.http.put(API_BASE_URL+'foodmenu/'+id+'/', data);
   }
 
   patch(data: any, id: number) {
-    return this.http.patch(API_BASE_URL+'menu/foodmenu/'+id+'/', data);
+    return this.http.patch(API_BASE_URL+'foodmenu/'+id+'/', data);
   }
 
   search_by_date(date: string) {
     let params = new HttpParams()
       .set('date', date);
 
-    return this.http.get(API_BASE_URL+'menu/foodmenu/search_by_date/', { params })
+    return this.http.get(API_BASE_URL+'foodmenu/search_by_date/', { params })
   }
 
 

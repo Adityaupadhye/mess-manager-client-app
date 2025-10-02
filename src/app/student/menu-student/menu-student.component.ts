@@ -37,7 +37,7 @@ export class MenuStudentComponent implements OnInit {
     const params = new HttpParams().set('date', formattedDate);
 
     // API CALL
-    this.http.get<{ data: Data[] }>(API_BASE_URL + 'menu/foodmenu/search_by_date/', {
+    this.http.get<{ data: Data[] }>(API_BASE_URL + 'foodmenu/search_by_date/', {
       params,
       observe: 'response'
     }).subscribe({
