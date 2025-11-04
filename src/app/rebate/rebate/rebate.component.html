@@ -56,16 +56,15 @@
                         rebate.status === 'rejected'
                     }"
                   >
-                    <div style="font-size: medium; padding-top: 3px">
+                    <div class="fs-5 fw-light p-1">
                       {{ rebate.status }}
                     </div>
                   </span>
                 </td>
-                <td>
+                <td *ngIf="rebate.status === 'pending'">
                   <button
                     type="button"
                     class="btn btn-success me-2"
-                    style="font-size: 0.9rem"
                     (click)="updateRebateStatus(rebate.id, 'inactive')"
                   >
                     Accept
@@ -73,11 +72,13 @@
                   <button
                     type="button"
                     class="btn btn-outline-danger"
-                    style="font-size: 0.9rem"
                     (click)="updateRebateStatus(rebate.id, 'rejected')"
                   >
                     Reject
                   </button>
+                </td>
+                <td *ngIf="rebate.status !== 'pending'">
+                  -
                 </td>
               </tr>
             </tbody>
