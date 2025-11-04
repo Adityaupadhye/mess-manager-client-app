@@ -100,6 +100,23 @@
             <img src="./assets/user.png" alt="user image">
           </div>
         </div>
+        <div class="row p-1" *ngIf="_hasScanningStarted && !_scanningError">
+          <!-- success alert -->
+          <div *ngIf="!userValidityError" class="alert alert-success m-2">
+            <h4 class="text">
+              ALLOWED
+            </h4>
+            <div>
+              Enjoy your meal!
+            </div>
+            <div>
+            <p class="fw-bold">
+              Time: {{ currentScannedUser != null ? ((currentScannedUser.timestamp * 1000) | date:'dd MMM yyyy, hh:mm:ss a') : 'N/A' }}
+            </p>
+          </div>
+          </div>
+        </div>
+        <!-- error alert -->
         <div *ngIf="userValidityError" class="alert alert-danger m-2">
           <h4
             *ngIf="isUserValid == false && studentData.hostel != ''"
@@ -109,6 +126,11 @@
           </h4>
           <div>
             {{userValidityError}}
+          </div>
+          <div>
+            <p class="fw-bold">
+              Last Scan Time: {{ currentScannedUser != null ? ((currentScannedUser.timestamp * 1000) | date:'dd MMM yyyy, hh:mm:ss a') : 'N/A' }}
+            </p>
           </div>
         </div>
         <h2 *ngIf="_scanningError">Invalid QR Code</h2>

@@ -39,6 +39,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
   protected userValidityError: string = ''
   currentFoodCategory: FoodCategory = FoodCategory.BREAKFAST;
   currentPersonType: PersonType = PersonType.STUDENT;
+  protected currentScannedUser?: LogEntry;
 
   studentData = {
     'name': '',
@@ -239,6 +240,8 @@ export class ScannerComponent implements OnInit, AfterViewInit {
   }
 
   checkUserValidity(parsedUserData: any) {
+    this.currentScannedUser = parsedUserData;
+    console.log('checking user validity for: ', this.currentScannedUser);
     const userRollNo = parsedUserData['roll_no'];
     this.iDBService.getRecordByKey(INDEXED_DB_USERS_STORE_NAME, userRollNo)
       .subscribe({
@@ -274,6 +277,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
                     // show error toast
                     this.toastr.error('Already scanned for this meal today.', `Error: ${userRollNo}`);
                     this._playSoundError();
+                    this.currentScannedUser = logEntry;
                     return;
                   }
                 }
@@ -329,6 +333,10 @@ export class ScannerComponent implements OnInit, AfterViewInit {
       timestamp: Math.floor(Date.now() / 1000),
       type: parsedUserData['role']
     }
+
+    this.currentScannedUser = currentLogEntry;
+
+    console.log('current log entry to be added: ', currentLogEntry);
 
     // adding log entry locally
     this.iDBService.addRecord(INDEXED_DB_LOG_ENTRY_STORE_NAME, currentLogEntry);
