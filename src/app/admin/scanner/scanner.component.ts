@@ -84,6 +84,9 @@ export class ScannerComponent implements OnInit, AfterViewInit {
     this.getAvailableDevices();
 
     this.isMobileView = window.innerWidth < this.breakpoint;
+
+    // fetch active rebates
+    this.syncService.fetchActiveRebates();
   }
 
   ngAfterViewInit(): void {

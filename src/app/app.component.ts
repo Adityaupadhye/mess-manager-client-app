@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
     //   }
     // }
     console.log('app init');
-    this.syncService.fetchActiveRebates();
+    // this.syncService.fetchActiveRebates();
     
   }
 

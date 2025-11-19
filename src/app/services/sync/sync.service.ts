@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IndexDbServiceService } from '../localdb/index-db-service.service';
 import { API_BASE_URL, INDEXED_DB_LOG_ENTRY_STORE_NAME, INDEXED_DB_USERS_STORE_NAME, LS_USERS_LAST_SYNC_TIME_KEY, Role } from '../../constants';
@@ -27,7 +27,12 @@ export class SyncService {
 
 
   fetchUsers(role: string, hostel: string) {
-    this.http.get(`${API_BASE_URL}?role=${Role.STUDENT}&hostel=${hostel}`)
+
+    const httpParams = new HttpParams()
+      .set('role', Role.STUDENT.toString())
+      .set('hostel', hostel);
+
+    this.http.get(`${API_BASE_URL}`, { params: httpParams })
       .subscribe({
         next: (response: any) => {
 
@@ -54,6 +59,8 @@ export class SyncService {
 
   fetchActiveRebates() {
 
+    console.log('fetching active rebates from server');
+
     let currentUser = this.loginService.getCurrentUser();
 
     if(currentUser == null) {
@@ -63,7 +70,11 @@ export class SyncService {
 
     // let user = JSON.parse(currentUser);
 
-    this.http.get(`${environment.apiBaseUrl}rebates/?hostel=${currentUser.hostel}&status=active`)
+    const httpParams = new HttpParams()
+        .set('hostel', currentUser.hostel)
+        .set('status', 'active');
+
+    this.http.get(`${environment.apiBaseUrl}rebates/`, { params: httpParams })
     .subscribe({
       next: (response: any) => {
         console.log('rebates: ', response);
