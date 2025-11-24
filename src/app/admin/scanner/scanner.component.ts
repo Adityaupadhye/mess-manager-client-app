@@ -74,7 +74,7 @@ export class ScannerComponent implements OnInit, AfterViewInit {
       date: ['', Validators.required],  // Date picker field
       food_category: ['breakfast', Validators.required],  // Dropdown field
       food_wastage: [0.00, [Validators.required]],  // Text input field
-      menu: ['', [Validators.required, Validators.maxLength(100)]]  // Textarea field
+      menu: ['', [Validators.required, Validators.maxLength(500)]]  // Textarea field
     });
 
   }
