@@ -28,6 +28,7 @@ import { ProfileComponent } from './student/profile/profile.component';
 import { MenuAdminComponent } from './admin-menu/admin-menu.component';
 import { WastageAdminComponent } from './wastage-admin/wastage-admin.component';
 import { AdminStudentsComponent } from './admin-students/admin-students.component';
+import { RatingModule } from 'primeng/rating';
 
 
 @NgModule({
