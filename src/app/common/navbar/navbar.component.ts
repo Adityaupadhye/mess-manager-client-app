@@ -3,7 +3,6 @@ import { LoginService } from '../../services/auth/login.service';
 import { Router } from '@angular/router';
 import { MenuService } from '../../services/menu/menu.service';
 import { SyncService } from '../../services/sync/sync.service';
-
 @Component({
   selector: 'app-navbar',
   standalone: false,
@@ -43,7 +42,6 @@ export class NavbarComponent implements OnInit{
     this.syncService.syncLogEntries();
   }
 
-
   // syncdata() {
   //   this.syncService.syncLogEntries().subscribe({
   //     next: () => {
@@ -61,4 +59,9 @@ export class NavbarComponent implements OnInit{
   //     panelClass: type === 'success' ? 'snack-bar-success' : 'snack-bar-error'
   //   });
   // }
+
+  isActive(route: string): boolean {
+    return this.router.url.includes(route);
+  }
+  isOpen=false;
 }

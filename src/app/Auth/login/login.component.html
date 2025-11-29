@@ -1,36 +1,69 @@
-<div class="container d-flex align-items-center justify-content-center vh-100">
-  <div class="card" style="width: 25rem;">
-    <div class="card-body">
-      <div class="logo">
-        <img src="./assets/logo.png" alt="Restaurant Logo" />
-        <h1 class="text">Welcome to SmartMeal!</h1>
-      <p class="text">Smart Choices, Delicious Meals</p>
-      </div>
-      <form>
-        <div class="input-group">
-              <input type="text"  placeholder="Username" [(ngModel)]="username" [ngModelOptions]="{standalone: true}" id="username" class="form-control" required>
-        </div>  
-        <div class="inputgroup" style="display: flex; align-items: center; position: relative;">
-          <input matInput 
-          [type]="showPassword ? 'password' : 'text'" 
-          placeholder="Password" 
-          [(ngModel)]="password" 
-          [ngModelOptions]="{standalone: true}" 
-          id="password" 
-          class="form-control" 
-          style="padding-right: 40px;"
-          required />
-          <mat-icon 
-              matSuffix 
-              (click)="togglePasswordVisibility()" 
-              style="position: absolute; right: 10px; cursor: pointer;">
-            {{showPassword ? 'visibility_off' : 'visibility'}}
-          </mat-icon>
-        </div>
-        <button class="btn btn-primary btn-block text-dark" style="margin-top: 20px;" (click)="checkButton()">Login</button>
-      </form> 
+<div class="min-h-screen bg-gradient-to-b from-black to-gray-800 flex items-center justify-center px-4">
+
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-lg border p-8 space-y-8">
+
+    <!-- Logo and Title -->
+    <div class="flex flex-col items-center text-center">
+      <img src="./assets/logo.png" alt="Restaurant Logo" class="w-20 h-20 mb-4" />
+      <h1 class="text-2xl font-semibold text-gray-800 mt-3">MessMate</h1>
+      <p class="text-sm text-gray-500 -mt-1">Smart Hostel Dining Management</p>
     </div>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="checkButton()" class="space-y-5">
+
+      <!-- Roll Number -->
+      <div class="space-y-1">
+        <label class="text-sm font-medium text-gray-700">Username</label>
+        <div class="flex items-center bg-gray-100 rounded-lg px-3 py-2 border">
+          <span class="material-icons text-gray-500 mr-2">badge</span>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            class="w-full bg-transparent outline-none text-sm"
+            [(ngModel)]="username"
+            name="username"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="space-y-1">
+        <label class="text-sm font-medium text-gray-700">Password</label>
+        <div class="flex items-center bg-gray-100 rounded-lg px-3 py-2 border relative">
+          <span class="material-icons text-gray-500 mr-2">lock</span>
+          <input
+            [type]="showPassword ? 'password' : 'text'" 
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Enter your password" 
+            class="w-full bg-transparent outline-none text-sm pr-10"
+            required
+          />
+          <button type="button" (click)="togglePasswordVisibility()" class="absolute right-2 text-gray-500 hover:text-gray-700">
+            <span class="material-icons">{{showPassword ? 'visibility_off' : 'visibility'}}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Forgot Password Link -->
+      <div class="text-right">
+        <a href="#" class="text-sm text-orange-600 hover:underline"><u>Forgot Password?</u></a>
+      </div>
+
+      <!-- Login Button -->
+      <button
+        type="submit"
+        class="w-full bg-black hover:bg-gray-800 text-white py-2.5 rounded-lg font-medium transition">
+        Login
+      </button>
+
+    </form>
+
+    <!-- Footer -->
+    <p class="text-center text-xs text-gray-500">
+      © 2025 MessMate - Smart Hostel Dining Management
+    </p>
   </div>
 </div>
-
-

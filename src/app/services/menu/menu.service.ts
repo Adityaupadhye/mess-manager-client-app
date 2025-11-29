@@ -44,5 +44,17 @@ export class MenuService {
     return this.http.get(API_BASE_URL+'foodmenu/search_by_date/', { params })
   }
 
+  weekly_menu(start: string){
+    let params=new HttpParams()
+      .set('start',start);
+
+    return this.http.get<any>(API_BASE_URL+'foodmenu/weekly_menu/',{params});
+  }
+
+  uploadExcel(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return this.http.post(API_BASE_URL+'foodmenu/uploadbulkmenu/', formData);
+  }
 
 }

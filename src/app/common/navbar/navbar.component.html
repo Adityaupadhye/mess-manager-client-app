@@ -1,3 +1,169 @@
+<nav class="w-full bg-white shadow-sm border-b px-6 py-3">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+    <!-- LEFT: Logo + Title -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center text-white text-2xl">
+        ψ
+      </div>
+      <div>
+        <h1 class="text-xl font-semibold text-gray-800">SmartMeal</h1>
+        <p class="text-xs text-gray-500 -mt-1">Admin Portal</p>
+      </div>
+    </div>
+
+    <!-- MOBILE HAMBURGER -->
+    <button
+      class="block lg:hidden hamburger"
+      [class.active]="isOpen"
+      (click)="isOpen = !isOpen"
+    >
+      <span></span>
+      <span></span>
+      <span></span> 
+    </button>
+
+    <!-- DESKTOP NAV TABS -->
+    <ul class="hidden lg:flex items-center justify-center gap-6 font-medium text-sm flex-1">
+
+       <li>
+        <a routerLink="/admin/chart"
+           [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('chart')}"
+           class="text-gray-600 hover:text-gray-900 px-2 pb-1 flex items-center gap-1">
+          <span class="material-icons text-sm">dashboard</span> Overview
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/scan"
+           [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('scan')}"
+           class="text-gray-600 hover:text-gray-900 px-2 pb-1 flex items-center gap-1">
+          <span class="material-icons text-sm">qr_code_scanner</span> Scan
+        </a>
+      </li>
+
+
+       <li>
+        <a routerLink="/admin/rebate"
+           [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('rebate')}"
+           class="text-gray-600 hover:text-gray-900 px-2 pb-1 flex items-center gap-1">
+          <span class="material-icons text-sm">money_off</span> Rebates
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/menu"
+           [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('menu')}"
+           class="text-gray-600 hover:text-gray-900 px-2 pb-1 flex items-center gap-1">
+          <span class="material-icons text-sm">restaurant_menu</span> Menu
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/wastage"
+           [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('wastage')}"
+           class="text-gray-600 hover:text-gray-900 px-2 pb-1 flex items-center gap-1">
+          <span class="material-icons text-sm">delete</span> Wastage
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/students"
+           [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('students')}"
+           class="text-gray-600 hover:text-gray-900 px-2 pb-1 flex items-center gap-1">
+          <span class="material-icons text-sm">group</span> Students
+        </a>
+      </li>
+
+       <button
+        (click)="syncdata()"
+        class="flex items-center py-2 px-3 text-gray-900 hover:text-gray-900"
+      >
+        <span class="material-icons text-sm">sync</span>
+        Sync
+      </button>
+
+    </ul>
+
+    <!-- RIGHT: ADMIN INFO -->
+    <div class="hidden lg:flex items-center gap-8">
+
+      <div class="flex items-center gap-2">
+        <span class="material-icons text-gray-500 text-sm">person</span>
+        <div>
+          <p class="text-sm font-medium text-gray-700">Admin</p>
+          <!-- <p class="text-xs text-gray-400">adminollege.edu</p> -->
+        </div>
+      </div>
+
+      <button
+        (click)="loginService.logout()"
+        class="flex items-center gap-1 text-gray-600 text-sm hover:text-gray-900"
+      >
+        <span class="material-icons text-base">logout</span>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- MOBILE DROPDOWN -->
+  <div
+    class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out"
+    [ngClass]="{
+      'max-h-0 opacity-0': !isOpen,
+      'max-h-[600px] opacity-100 mt-3': isOpen
+    }"
+  >
+    <div class="flex flex-col gap-3 text-sm">
+
+      <a routerLink="/admin/chart" class="py-2 px-3 border-b flex items-center gap-2">
+        <span class="material-icons text-sm">dashboard</span> Overview
+      </a>
+
+      <a routerLink="/admin/scan" class="py-2 px-3 border-b flex items-center gap-2">
+        <span class="material-icons text-sm">qr_code_scanner</span> Scan
+      </a>
+
+        <a routerLink="/admin/rebate" class="py-2 px-3 border-b flex items-center gap-2">
+        <span class="material-icons text-sm">money_off</span> Rebates
+      </a>
+
+      <a routerLink="/admin/menu" class="py-2 px-3 border-b flex items-center gap-2">
+        <span class="material-icons text-sm">restaurant_menu</span> Menu
+      </a>
+
+      <a routerLink="/admin/wastage" class="py-2 px-3 border-b flex items-center gap-2">
+        <span class="material-icons text-sm">delete</span> Wastage
+      </a>
+
+      <a routerLink="/admin/students" class="py-2 px-3 border-b flex items-center gap-2">
+        <span class="material-icons text-sm">group</span> Students
+      </a>    
+
+      <button
+        (click)="syncdata()"
+        class="flex items-center  border-b py-2 px-3 text-gray-600 hover:text-gray-900"
+      >
+        <span class="material-icons">sync</span>
+        Sync
+      </button>
+
+      <button
+        (click)="loginService.logout()"
+        class="flex items-center gap-2 py-2 px-3 text-gray-600 hover:text-gray-900"
+      >
+        <span class="material-icons">logout</span>
+        Logout
+      </button>
+
+    </div>
+  </div>
+</nav>
+
+
+
+
+<!-- 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <nav class="navbar navbar-expand-lg" style="background-color: #faf27d">
   <div class="container-fluid">
@@ -13,7 +179,7 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
+    <div class="navbar-collapse" id="navbarTogglerDemo02">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
         <li class="nav-item m-2">
           <a [ngClass]="{'active': this.router.url.includes('scan')}" class="nav-link font-weight-bold" aria-current="page" routerLink="/admin/scan">Home</a>
@@ -81,4 +247,4 @@
     $('.nav-link').hover(function() {
       $(this).trigger('click');
     });
-  </script>
+  </script> -->

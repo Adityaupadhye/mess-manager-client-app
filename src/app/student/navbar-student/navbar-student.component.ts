@@ -13,5 +13,5 @@ export class NavbarStudentComponent {
     public router: Router,
     public loginService: LoginService,
   ) {}
-  
+  isOpen=false;
 }

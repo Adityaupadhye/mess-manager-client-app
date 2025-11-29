@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   constructor(
     private syncService: SyncService
   ) {}
-
+  
 
   ngOnInit(): void {
 

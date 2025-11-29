@@ -73,6 +73,7 @@ export class RebateComponent {
         if (rebate) {
           rebate.status = newStatus;
         }
+        this.getrebates();//To refresh the page on clicking accept/reject.
       },
       error: (error) => {
         console.error("Error updating status:", error);
@@ -98,5 +99,14 @@ export class RebateComponent {
   
     this.todayDate= `${day}-${month}-${year}`; // Format as dd-mmm-yyyy
   }
+
+
+  selectedTab: 'active' | 'pending' = 'pending'; // Pending open by default
+
+  get filteredRebates() {
+  return this.selectedTab === 'active' ? this.activerebateData : this.rebateData;
+}
+
+
 
 }

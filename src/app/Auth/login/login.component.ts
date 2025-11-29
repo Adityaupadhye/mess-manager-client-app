@@ -8,13 +8,12 @@ import { Role } from '../../constants';
 import { SyncService } from '../../services/sync/sync.service';
 import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
 import { CommonModule } from '@angular/common';
-
-
+import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    SharedMaterialComponentsModule, FormsModule, CommonModule],
+    SharedMaterialComponentsModule, FormsModule, CommonModule, LucideAngularModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -22,7 +21,7 @@ export class LoginComponent {
 
 
   constructor(
-    private loginService: LoginService, 
+    private loginService: LoginService,
     private router: Router,
     private syncService: SyncService,
     private spinner: NgxSpinnerService
@@ -50,7 +49,7 @@ export class LoginComponent {
 
 
   showPassword: boolean = true; // To track password visibility
-  
+
 
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
@@ -132,7 +131,7 @@ export class LoginComponent {
             this.router.navigate(['admin/scan']);
           }
         }
-        
+
       },
       error: (err) => {
         // Handle error
@@ -142,8 +141,11 @@ export class LoginComponent {
 
       }
     });
+
+
   }
-  
-  
+
+
+
 }
 

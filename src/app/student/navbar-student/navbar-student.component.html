@@ -1,49 +1,91 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<nav class="navbar navbar-expand-lg" style="background-color: #faf27d">
-  <div class="container-fluid p-0">
-    <h4 class="logo">SmartMeal</h4>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarTogglerDemo02"
-      aria-controls="navbarTogglerDemo02"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
+<nav class="w-full bg-white shadow-sm border-b px-6 py-3">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+    <!-- LEFT: Logo + Title -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center text-white text-2xl">
+        ψ
+      </div>
+      <div>
+        <h1 class="text-xl font-semibold text-gray-800">MessMate</h1>
+        <p class="text-xs text-gray-500 -mt-1">Student Account</p>
+      </div>
+    </div>
+
+    <!-- MOBILE MENU TOGGLER -->
+    <button class="block lg:hidden text-gray-600 text-3xl hamburger" [class.active]="isOpen" (click)="isOpen = !isOpen">
+      <span></span>
+      <span></span>
+      <span></span>
     </button>
-    <div class="collapse navbar-collapse w-100" id="navbarTogglerDemo02">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item m-2">
-          <a [ngClass]="{'active': this.router.url.includes('home')}" class="nav-link font-weight-bold" routerLink="/student/home">Home</a>
-        </li>
-        <li class="nav-item m-2">
-          <a [ngClass]="{'active': this.router.url.includes('menu')}" class="nav-link font-weight-bold" routerLink="/student/menu">Menu</a>
-        </li>
-        <li class="nav-item m-2">
-          <a [ngClass]="{'active': this.router.url.includes('rebate')}" class="nav-link font-weight-bold" routerLink="/student/rebate">Rebate</a>
-        </li>
-        <li class="nav-item m-2">
-          <button
-            class="btn btn-lg btn-outline-danger"
-            style="font-weight: 500;"
-            (click)="loginService.logout()"
-          >
-            Logout
-          </button>
-        </li>
-      </ul>
+
+
+    <!-- CENTER: Nav Tabs -->
+    <ul class="flex-1 lg:flex items-center justify-center gap-6 font-medium text-sm hidden lg:flex">
+      <li>
+        <a routerLink="/student/home"
+          [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('home')}"
+          class="text-gray-600 hover:text-gray-900 px-2 pb-1">
+          Home
+        </a>
+      </li>
+      <li>
+        <a routerLink="/student/menu"
+          [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('menu')}"
+          class="text-gray-600 hover:text-gray-900 px-2 pb-1">
+          Menu
+        </a>
+      </li>
+      <li>
+        <a routerLink="/student/rebate"
+          [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('rebate')}"
+          class="text-gray-600 hover:text-gray-900 px-2 pb-1">
+          Rebate
+        </a>
+      </li>
+      <li>
+        <a routerLink="/student/profile"
+          [ngClass]="{'text-gray-900 font-semibold border-b-2 border-gray-900' : router.url.includes('profile')}"
+          class="text-gray-600 hover:text-gray-900 px-2 pb-1">
+          Profile
+        </a>
+      </li>
+    </ul>
+
+    <!-- RIGHT: User + Logout -->
+    <div class="hidden lg:flex items-center gap-8">
+      <button (click)="loginService.logout()" class="flex items-center gap-1 text-gray-600 text-sm hover:text-gray-900">
+        <span class="material-icons text-base">logout</span>
+        Logout
+      </button>
     </div>
   </div>
+
+  <!-- MOBILE DROPDOWN MENU -->
+  <div class="lg:hidden overflow-hidden transition-all duration-300 ease-in-out" [ngClass]="{
+    'max-h-0 opacity-0': !isOpen,
+    'max-h-96 opacity-100 mt-3': isOpen
+  }">
+    <div class="flex flex-col gap-3 text-sm">
+
+      <a routerLink="/student/home" class="py-2 px-3 border-b"
+        [ngClass]="{'font-semibold text-gray-900': router.url.includes('home')}">Home</a>
+
+      <a routerLink="/student/menu" class="py-2 px-3 border-b"
+        [ngClass]="{'font-semibold text-gray-900': router.url.includes('menu')}">Menu</a>
+
+      <a routerLink="/student/rebate" class="py-2 px-3 border-b"
+        [ngClass]="{'font-semibold text-gray-900': router.url.includes('rebate')}">Rebate</a>
+
+      <a routerLink="/student/profile" class="py-2 px-3 border-b"
+        [ngClass]="{'font-semibold text-gray-900': router.url.includes('profile')}">Profile</a>
+
+      <button (click)="loginService.logout()"
+        class="flex items-center gap-1 py-2 px-3 text-gray-600 hover:text-gray-900">
+        <span class="material-icons text-base">logout</span>
+        Logout
+      </button>
+    </div>
+  </div>
+
 </nav>
-
-
-<script>
-  // Optional: Disable jQuery hover effect for mobile
-  if ($(window).width() > 768) {
-      $('.nav-link').hover(function() {
-          $(this).trigger('click');
-      });
-  }
-</script>

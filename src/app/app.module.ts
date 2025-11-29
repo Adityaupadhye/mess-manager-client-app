@@ -14,7 +14,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts'
 import { NavbarComponent } from "./common/navbar/navbar.component";
-import { GetChartComponent } from './charts/get-chart/get-chart.component';
+import { GetChartComponent } from './admin-dashboard/get-chart/get-chart.component';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ToastrModule } from 'ngx-toastr';
 import { DashboardComponent } from './dashboard/dashboard/dashboard.component';
@@ -24,6 +24,10 @@ import { StudentHomeComponent } from './student/student-home/student-home.compon
 import { QRCodeModule } from 'angularx-qrcode';
 import { MenuStudentComponent } from './student/menu-student/menu-student.component';
 import { RebateStudentComponent } from './student/rebate-student/rebate-student.component';
+import { ProfileComponent } from './student/profile/profile.component';
+import { MenuAdminComponent } from './admin-menu/admin-menu.component';
+import { WastageAdminComponent } from './wastage-admin/wastage-admin.component';
+import { AdminStudentsComponent } from './admin-students/admin-students.component';
 
 
 @NgModule({
@@ -37,7 +41,11 @@ import { RebateStudentComponent } from './student/rebate-student/rebate-student.
     NavbarStudentComponent,
     StudentHomeComponent,
     MenuStudentComponent,
-    RebateStudentComponent
+    RebateStudentComponent,
+    ProfileComponent,
+    MenuAdminComponent,
+    WastageAdminComponent,
+    AdminStudentsComponent,
   ],
   imports: [
 

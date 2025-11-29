@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { IndexDbServiceService } from '../../services/localdb/index-db-service.service';
-
 interface UserDetails {
   hostel: string;
 

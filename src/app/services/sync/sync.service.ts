@@ -27,7 +27,8 @@ export class SyncService {
 
 
   fetchUsers(role: string, hostel: string) {
-    this.http.get(`${API_BASE_URL}?role=${Role.STUDENT}&hostel=${hostel}`)
+    console.log("this is role",role,"This is hostel",hostel)
+    this.http.get(`${API_BASE_URL}?role=${Role.STUDENT}&hostel=${14}`)
       .subscribe({
         next: (response: any) => {
 

@@ -1,17 +1,12 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { API_BASE_URL } from '../../constants';
-import { MenuService } from '../../services/menu/menu.service';
-
-
-
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { MenuService } from '../services/menu/menu.service';
 @Component({
-  selector: 'app-menu-student',
-  standalone: false,
-  templateUrl: './menu-student.component.html',
-  styleUrls: ['./menu-student.component.css']
+  selector: 'app-admin-menu',
+  templateUrl: './admin-menu.component.html',
+  styleUrl: './admin-menu.component.css'
 })
-export class MenuStudentComponent implements OnInit {
+export class MenuAdminComponent {
 
   days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
   meals = ['breakfast', 'lunch', 'snacks', 'dinner'];
@@ -22,10 +17,10 @@ export class MenuStudentComponent implements OnInit {
   selectedDay: any |null = null;
   mondayDate: string;
 
-  constructor( 
+  constructor(
     private http: HttpClient,
-    private menuservice : MenuService,
-  ) { 
+    private menuservice: MenuService,
+  ) {
     const today = new Date();
     const dayNumber = new Date().getDay(); // e.g., 1 for Monday 
     this.selectedDay=this.days[dayNumber-1];
@@ -35,7 +30,7 @@ export class MenuStudentComponent implements OnInit {
     this.mondayDate = monday.toISOString().slice(0, 10);  // YYYY-MM-DD
   }
 
-  ngOnInit(): void {
+  ngOnInit():void {
     this.menuservice.weekly_menu(this.mondayDate).subscribe({
       next: (res: any[]) => {
         this.weekMenu = res;
@@ -55,4 +50,39 @@ export class MenuStudentComponent implements OnInit {
     this.selectedDay = day;
   }
 
+  selectedFile: File | null = null;
+  message = "";
+  error = "";
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file && file.name.endsWith('.csv')) {
+      this.selectedFile = file;
+    } else {
+      alert('Please select a valid .csv file.');
+      event.target.value = '';
+    }
+  }
+
+  uploadMenu() {
+    if (!this.selectedFile) {
+      this.error = "Please select a file!";
+      return;
+    }
+
+    this.menuservice.uploadExcel(this.selectedFile).subscribe({
+      next: () => {
+        console.log("inside next")
+        this.message = "Menu uploaded successfully!";
+        this.error = "";
+      },
+      error: () => {
+        console.log("some eroor occured.")
+        this.error = "Upload failed!";
+      }
+    })
+  }
 }
+
+
+

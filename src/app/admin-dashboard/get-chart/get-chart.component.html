@@ -1,0 +1,285 @@
+<app-navbar></app-navbar>
+
+
+<div class="container  min-h-screen bg-gray-50">
+  <!-- Main Container -->
+  <div class="p-6 space-y-8">
+
+    <!-- Top Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+      <!-- Registered Students -->
+      <div class="bg-blue-600 text-white rounded-xl p-6 shadow">
+        <div class="flex items-center justify-between">
+          <span class="material-icons text-4xl">groups</span>
+          <span class="text-xs bg-blue-800 px-2 py-1 rounded-md">Total</span>
+        </div>
+        <p class="text-4xl font-semibold mt-4">450</p>
+        <p class="mt-2 text-sm opacity-90">Registered Students</p>
+      </div>
+
+      <!-- Active Students -->
+      <div class="bg-green-500 text-white rounded-xl p-6 shadow">
+        <div class="flex items-center justify-between">
+          <span class="material-icons text-4xl">trending_up</span>
+          <span class="text-xs bg-green-700 px-2 py-1 rounded-md">Today</span>
+        </div>
+        <p class="text-4xl font-semibold mt-4">387</p>
+        <p class="mt-2 text-sm opacity-90">Active Students</p>
+      </div>
+
+      <!-- Breakfast -->
+      <div class="bg-orange-500 text-white rounded-xl p-6 shadow">
+        <div class="flex items-center justify-between">
+          <span class="material-icons text-4xl">local_cafe</span>
+          <span class="text-xs bg-orange-700 px-2 py-1 rounded-md">Breakfast</span>
+        </div>
+        <p class="text-4xl font-semibold mt-4">342</p>
+        <p class="mt-2 text-sm opacity-90">Meals Served</p>
+      </div>
+
+      <!-- Lunch -->
+      <div class="bg-orange-400 text-white rounded-xl p-6 shadow">
+        <div class="flex items-center justify-between">
+          <span class="material-icons text-4xl">ramen_dining</span>
+          <span class="text-xs bg-orange-600 px-2 py-1 rounded-md">Lunch</span>
+        </div>
+        <p class="text-4xl font-semibold mt-4">298</p>
+        <p class="mt-2 text-sm opacity-90">Meals Served</p>
+      </div>
+    </div>
+
+    <!-- Meal Distribution -->
+    <div class="bg-white rounded-xl shadow p-6 border">
+
+      <p class="font-medium text-lg mb-5">Today's Meal Distribution</p>
+
+      <!-- Breakfast -->
+      <div class="mb-4">
+        <div class="flex justify-between text-sm mb-1">
+          <span class="flex items-center gap-1">
+            <span class="material-icons text-orange-500 text-base">free_breakfast</span>
+            Breakfast
+          </span>
+          <span class="text-gray-500">342/450</span>
+        </div>
+        <div class="h-2 bg-gray-200 rounded-full">
+          <div class="h-full bg-black rounded-full" style="width: 76%"></div>
+        </div>
+      </div>
+
+      <!-- Lunch -->
+      <div class="mb-4">
+        <div class="flex justify-between text-sm mb-1">
+          <span class="flex items-center gap-1">
+            <span class="material-icons text-orange-600 text-base">lunch_dining</span>
+            Lunch
+          </span>
+          <span class="text-gray-500">298/450</span>
+        </div>
+        <div class="h-2 bg-gray-200 rounded-full">
+          <div class="h-full bg-black rounded-full" style="width: 66%"></div>
+        </div>
+      </div>
+
+      <!-- Dinner -->
+      <div>
+        <div class="flex justify-between text-sm mb-1">
+          <span class="flex items-center gap-1">
+            <span class="material-icons text-blue-600 text-base">dinner_dining</span>
+            Dinner
+          </span>
+          <span class="text-gray-500">156/450</span>
+        </div>
+        <div class="h-2 bg-gray-200 rounded-full">
+          <div class="h-full bg-black rounded-full" style="width: 34%"></div>
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <!-- Bottom Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-4">
+
+      <div class="bg-white shadow p-6 rounded-xl text-center border">
+        <p class="text-3xl font-bold text-blue-600">98%</p>
+        <p class="text-sm text-gray-600 mt-1">Attendance Rate</p>
+      </div>
+
+      <div class="bg-white shadow p-6 rounded-xl text-center border">
+        <p class="text-3xl font-bold text-green-600">4.5★</p>
+        <p class="text-sm text-gray-600 mt-1">Food Rating</p>
+      </div>
+
+      <div class="bg-white shadow p-6 rounded-xl text-center border">
+        <p class="text-3xl font-bold text-orange-600">12</p>
+        <p class="text-sm text-gray-600 mt-1">Items Today</p>
+      </div>
+
+      <div class="bg-white shadow p-6 rounded-xl text-center border">
+        <p class="text-3xl font-bold text-purple-600">3</p>
+        <p class="text-sm text-gray-600 mt-1">Hostels</p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div class="container-fluid">
+  <div class="mt-5 row justify-content-center">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-8 d-flex flex-column justify-content-end" style="height: 100px;">
+          <p class="daily-data text-white mb-4">
+            Date-wise Data:
+            <span *ngIf="displayDate; else showYesterdayDate">{{ displayDate | date: 'EEE MMM d yyyy' }}</span>
+            <ng-template #showYesterdayDate>{{ displayYesterdayDate | date: 'EEE MMM d yyyy' }}</ng-template>
+          </p>
+        </div>
+
+        <div class="col-md-2 text-end">
+          <!-- Date Picker -->
+          <div class="mb-3">
+            <label for="date" class="col-form-label">Select Date:</label>
+            <input type="date" class="form-control" id="date" [(ngModel)]="dateSelected"
+              (ngModelChange)="onDateChange()">
+          </div>
+        </div>
+        <div class="col-md-2 d-flex flex-column justify-content-end mb-4">
+          <button (click)="fetchSelectedDate()" class="btn btn-primary ">Check</button>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-6 mt-3">
+          <div class="card p-3">
+            <div *ngIf="loadingForPieAttendence">Loading...</div>
+            <canvas *ngIf="!loadingForPieAttendence && pieChartData" baseChart class="pie-chart" [type]="'pie'"
+              [data]="pieChartData" [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend"
+              style="margin: 0 auto">
+            </canvas>
+            <div *ngIf="!loadingForPieAttendence && !pieChartData" class="text-center">
+              <p><b>No Data Available for the Selected Date</b></p>
+            </div>
+            <div class="text-center mt-3">
+              <p><b>Student attendance across different meal categories</b></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mt-3">
+          <div class="card p-3">
+            <div *ngIf="loadingForPieWastage">Loading...</div>
+            <canvas *ngIf="!loadingForPieWastage && doughnutChartData" class="doughnut-chart" baseChart
+              [type]="'doughnut'" [data]="doughnutChartData" [options]="doughnutChartOptions" [legend]="true"
+              style="display: block; margin: 0 auto">
+            </canvas>
+            <div *ngIf="!loadingForPieWastage && !doughnutChartData" class="text-center">
+              <p><b>No Data Available for the Selected Date</b></p>
+            </div>
+            <div class="text-center mt-3">
+              <p><b>Food Wastage across different meal categories</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-2"></div>
+  </div>
+  <div class="mt-5 row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="card p-3">
+        <canvas class="bar-chart" baseChart [data]="barChartData" [options]="barChartOptions"
+          [plugins]="barChartPlugins" [legend]="barChartLegend" [type]="'bar'" style="display: block; margin: 0 auto">
+        </canvas>
+        <div class="text-center mt-3">
+          <p>
+            <b style="color: black">Student attendance across different meal categories (Last 7
+              days)</b>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+
+  <!-- <div *ngIf="checkData" class="text-white">
+    <h2>Weekly Data</h2>
+    <pre>{{ checkData| json }}</pre>
+  </div> -->
+
+  <div class="mt-5 row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="card p-3">
+        <div *ngIf="loadingForLineWastage">Loading...</div>
+        <canvas *ngIf="!loadingForLineWastage && lineChartData" baseChart class="line-chart" [type]="'line'"
+          [data]="lineChartData" [options]="lineChartOptions" [legend]="lineChartLegend"
+          style="display: block; margin: 0 auto">
+        </canvas>
+        <div *ngIf="!loadingForLineWastage && !lineChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
+        <div class="text-center mt-3">
+          <p>
+            <b style="color: black">Food Wastage across different meal categories (Last 7
+              days)</b>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="mt-5 row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="card p-3">
+        <div *ngIf="loadingForBarMonthlyAttendence">Loading...</div>
+        <canvas *ngIf="!loadingForBarMonthlyAttendence && secondBarChartData" baseChart class="bar-chart" [type]="'bar'"
+          [data]="secondBarChartData" [options]="secondBarChartOptions" style="display: block; margin: 0 auto"></canvas>
+        <div *ngIf="!loadingForBarMonthlyAttendence && !secondBarChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
+        <div class="text-center mt-3">
+          <p>
+            <b style="color: black">Mean Student attendance across different meal categories
+              (Monthly)
+            </b>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="my-5 row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <div class="card p-3">
+        <div *ngIf="loadingForLineWastageMonthly">Loading...</div>
+        <canvas *ngIf="!loadingForLineWastageMonthly && secondLineChartData" class="bar-chart" baseChart
+          class="line-chart" [type]="'line'" [data]="secondLineChartData" [options]="secondLineChartOptions"
+          [legend]="secondlineChartLegend" style="display: block; margin: 0 auto">
+        </canvas>
+        <div *ngIf="!loadingForLineWastageMonthly && !secondLineChartData" class="text-center">
+          <p><b>No Data Available</b></p>
+        </div>
+        <div class="text-center mt-3">
+          <p>
+            <b style="color: black">Mean Food Wastage across different meal categories (Monthly)
+            </b>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="pb-2"></div>
+</div>

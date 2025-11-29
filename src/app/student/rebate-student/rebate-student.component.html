@@ -1,117 +1,135 @@
 <app-navbar-student></app-navbar-student>
-<div class="container-fluid p-0">
-  <!-- Upper Half -->
-  <div class="row upper-half">
-    <div class="col-12 col-md-8 col-lg-6 d-flex flex-column align-items-center">
-      <h1 class="display-4">Request Rebate</h1>
 
-      <div class="alert alert-primary w-100" role="alert">
+
+<!-- PAGE WRAPPER -->
+<div class="min-h-screen bg-white py-10">
+
+  <!-- FIXED WIDTH WRAPPER (Matches Table Width) -->
+  <div class="max-w-5xl mx-auto space-y-10 px-4">
+
+    <!-- TITLE -->
+    <div class="text-center">
+      <h1 class="text-3xl font-semibold text-gray-800 flex justify-center items-center gap-2">
+        <span class="material-icons text-orange-600">request_quote</span>
+        Request Rebate
+      </h1>
+
+      <!-- Notice / Info -->
+      <div
+        class="mt-4 bg-blue-50 border border-blue-200 text-blue-800 px-5 py-3 rounded-xl shadow-sm text-sm flex items-center gap-2 justify-center">
+        <span class="material-icons text-base">info</span>
         Rebates can be requested for durations between 3 and 15 days, Rebate has to be requested 2 days prior to start date.
+      
       </div>
+    </div>
 
-      <div class="card p-4 mt-3 custom-card-size">
-        <mat-form-field appearance="fill" class="w-100 date-field">
-          <mat-label>Choose Start and End Date</mat-label>
-          <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-            <input
-              matStartDate
-              formControlName="start"
-              placeholder="Start date"
-              required
-              (dateChange)="onStartDateChange($event)"
-            />
-            <input
-              matEndDate
-              formControlName="end"
-              placeholder="End date"
-              required
-              (dateChange)="onEndDateChange($event)"
-            />
-          </mat-date-range-input>
+    <!-- REBATE REQUEST CARD -->
+    <div class="bg-white shadow-lg border rounded-2xl p-8 space-y-6">
 
-          <!-- <mat-hint *ngIf="range.value.start && range.value.end">
-            Start: {{ range.value.start | date: 'MM/dd/yyyy' }} – End: {{ range.value.end | date: 'MM/dd/yyyy' }}
-          </mat-hint> -->
-          <mat-hint *ngIf="!range.value.start || !range.value.end">
-            Start: MM/DD/YYYY – End: MM/DD/YYYY
-          </mat-hint>
-          <!-- <mat-hint *ngIf="isStartDateInvalid" class="text-danger">
-            Start date should be at least 2 days after today.
-          </mat-hint> -->
+      <!-- Date Picker -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Choose Start and End Date</mat-label>
 
-          <mat-hint *ngIf="range.value.start && range.value.end">
-            Duration: {{ duration }} days
-          </mat-hint>
-          <mat-hint *ngIf="duration < 3 || duration > 15 || isStartDateInvalid" class="text-danger">
-            Invalid Duration or Start Date
-          </mat-hint>
-          <mat-hint *ngIf="duration >= 3 && duration <= 15 && !isStartDateInvalid" class="text-success">
-            Valid Duration
-          </mat-hint>
+        <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+          <input matStartDate formControlName="start" placeholder="Start date" (dateChange)="onStartDateChange($event)" />
+          <input matEndDate formControlName="end" placeholder="End date" (dateChange)="onEndDateChange($event)" />
+        </mat-date-range-input>
 
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker touchUi #picker></mat-date-range-picker>
-        </mat-form-field>
+        <mat-hint *ngIf="!range.value.start || !range.value.end">
+          Start: MM/DD/YYYY – End: MM/DD/YYYY
+        </mat-hint>
 
-        <mat-form-field appearance="fill" class="mt-4 w-100 reason-field">
-          <mat-label>Rebate Reason</mat-label>
-          <input
-            matInput
-            placeholder="Enter reason for rebate"
-            formControlName="reason"
-          />
-        </mat-form-field>
+        <mat-hint *ngIf="range.value.start && range.value.end">
+          Duration: {{ duration }} days
+        </mat-hint>
 
-        <button
+        <mat-hint *ngIf="duration < 3 || duration > 15 || isStartDateInvalid" class="text-red-600">
+          Invalid Duration or Start Date
+        </mat-hint>
+
+        <mat-hint *ngIf="duration >= 3 && duration <= 15 && !isStartDateInvalid" class="text-green-600">
+          Valid Duration
+        </mat-hint>
+
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+
+      <!-- Reason -->
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Rebate Reason</mat-label>
+        <input matInput placeholder="Enter reason for rebate" formControlName="reason" />
+      </mat-form-field>
+
+      <!-- Submit BTN -->
+      <button
         mat-flat-button
-          
-          (click)="submitRebate()"
-          class="mt-3"
-        >
-          Submit
-        </button>
+        (click)="submitRebate()"
+        class="w-full bg-orange-600 hover:bg-orange-700 text-white py-2.5 rounded-lg text-lg"
+      >
+        <span class="material-icons align-middle mr-1">send</span>
+        Submit Request
+      </button>
+    </div>
+
+    <!-- REBATE HISTORY TABLE -->
+    <div class="bg-white shadow-xl rounded-2xl border p-8">
+
+      <h2 class="text-2xl font-semibold mb-5 text-gray-800 flex items-center gap-2">
+        <span class="material-icons text-orange-600">history</span>
+        Rebate Status
+      </h2>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 rounded-lg">
+          <thead class="bg-gray-100 text-gray-700 text-sm">
+            <tr>
+              <th class="py-3 px-4 border-b">Rebate ID</th>
+              <th class="py-3 px-4 border-b">Start Date</th>
+              <th class="py-3 px-4 border-b">End Date</th>
+              <th class="py-3 px-4 border-b">Days</th>
+              <th class="py-3 px-4 border-b">Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr
+              *ngFor="let rebateData of studentRebateDataHistory"
+              class="text-sm border-b hover:bg-gray-50 transition">
+
+              <td class="py-3 px-4">{{ rebateData.id }}</td>
+              <td class="py-3 px-4">{{ rebateData.start_date }}</td>
+              <td class="py-3 px-4">{{ rebateData.end_date }}</td>
+              <td class="py-3 px-4">{{ rebateData.duration }}</td>
+
+              <td class="py-3 px-4">
+                <span
+                  class="px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1"
+                  [ngClass]="{
+                    'bg-green-100 text-green-700': rebateData.status === 'active',
+                    'bg-blue-100 text-blue-700': rebateData.status === 'inactive',
+                    'bg-yellow-100 text-yellow-800': rebateData.status === 'pending',
+                    'bg-red-100 text-red-700': rebateData.status === 'expired' || rebateData.status === 'rejected'
+                  }"
+                >
+                  <span class="material-icons text-sm">
+                    {{ rebateData.status === 'active' ? 'check_circle' :
+                       rebateData.status === 'pending' ? 'schedule' :
+                       rebateData.status === 'inactive' ? 'info' :
+                       'cancel' }}
+                  </span>
+
+                  {{ rebateData.status }}
+                </span>
+              </td>
+
+            </tr>
+          </tbody>
+
+        </table>
       </div>
     </div>
-  </div>
 
-
-   <!-- Bottom Half -->
-   <div class="row bottom-half">
-    <div class="col-12 col-md-10 col-lg-8 bg-dark mx-auto">
-      <h2 class="text-center mb-4 text-center">Rebate Status</h2>
-      <table class="table table-bordered table-hover table-striped text-white">
-        <thead class="table-heading" style="font-weight: 500">
-          <tr>
-            
-            <th>Rebate Id</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Days</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let rebateData of studentRebateDataHistory; let i=index">
-            <td>{{ rebateData.id }}</td>
-            <td>{{ rebateData.start_date }}</td>
-            <td>{{ rebateData.end_date }}</td>
-            <td>{{ rebateData.duration }}</td>
-            <td>
-              <span
-                class="badge"
-                [ngClass]="{
-                  'bg-success': rebateData.status === 'active',
-                  'bg-info': rebateData.status === 'inactive',
-                  'bg-warning text-dark': rebateData.status === 'pending',
-                  'bg-danger': rebateData.status === 'expired' || rebateData.status === 'rejected'
-                }"
-              >
-                <div style="font-size: medium; padding-top: 3px;">{{ rebateData.status }}</div>
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </div>
+

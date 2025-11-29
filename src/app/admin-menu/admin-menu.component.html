@@ -1,14 +1,43 @@
-<app-navbar-student></app-navbar-student>
+<app-navbar></app-navbar>
 
 <div class="max-w-7xl mx-auto space-y-6 p-4 md:p-8">
 
-  <!-- WEEKLY TABS -->
+  <!-- WEEK MENU UPLOAD -->
+  <div class="bg-white shadow-sm border rounded-2xl p-6">
+    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
+      <span class="material-icons text-orange-600">upload_file</span>
+      Upload Weekly Menu (.csv)
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="md:col-span-2">
+        <label class="text-sm font-medium">Select CSV File</label>
+        <input type="file" accept=".csv" (change)="onFileSelected($event)" class="w-full border rounded-xl px-3 py-2" />
+      </div>
+
+      <div class="flex items-end">
+        <button (click)="uploadMenu()" [disabled]="!selectedFile"
+          class="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-black text-white py-2 rounded-xl">
+          Upload Menu
+        </button>
+        <p *ngIf="message" class="text-green-600">{{ message }}</p>
+        <p *ngIf="error" class="text-red-600">{{ error }}</p>
+      </div>
+    </div>
+
+    <p *ngIf="selectedFile" class="text-sm mt-3 text-gray-600">
+      Selected: {{ selectedFile.name }}
+    </p>
+  </div>
+
+
+  <!-- WEEKLY TABS (same UI as student) -->
   <div class="flex gap-3 overflow-x-auto pb-2">
-    <button *ngFor="let d of weekMenu" class="px-4 py-2 rounded-xl border text-sm font-medium transition" [ngClass]="{
+    <button *ngFor="let d of weekMenu" class="px-6 py-2 rounded-xl border text-sm font-medium transition" [ngClass]="{
         'bg-black text-white border-orange-600': selectedDay === d,
         'bg-white text-gray-700 border-gray-300': selectedDay !== d
       }" (click)="selectDay(d)">
-      {{ d.day }}
+      {{d.day}}
     </button>
   </div>
 
@@ -30,7 +59,8 @@
           }}
         </span>
       </div>
-      
+
+
       <div>
         <h4 class="text-lg capitalize font-semibold">{{ meal }}</h4>
         <p class="text-sm text-gray-600">
@@ -55,5 +85,4 @@
       </span>
     </div>
   </div>
-
 </div>

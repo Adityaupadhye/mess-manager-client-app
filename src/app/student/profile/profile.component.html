@@ -1,0 +1,76 @@
+<app-navbar-student></app-navbar-student>
+
+<div class="w-full min-h-screen flex justify-center bg-gray-50 py-12 px-4">
+    <div class="bg-white shadow-xl rounded-3xl p-8 w-full max-w-lg">
+
+        <!-- Profile Section -->
+        <div class="flex flex-col items-center">
+            <div class="relative">
+
+                <!-- Avatar -->
+                <div class="w-36 h-36 rounded-full bg-blue-50 border-4 border-blue-200 
+             flex items-center justify-center shadow-lg">
+                    <span class="material-icons text-blue-600 text-7xl">account_circle</span>
+                </div>
+
+                <!-- Pencil Icon (Click to Upload) -->
+                <label for="profilePicInput" class="absolute bottom-2 right-2 bg-white rounded-full w-10 h-10 
+             flex items-center justify-center shadow-md cursor-pointer 
+             hover:bg-gray-100 active:bg-gray-200 transition">
+                    <span class="material-icons text-blue-600 text-xl">edit</span>
+                </label>
+
+                <!-- Single File Input -->
+                <input type="file" id="profilePicInput" accept="image/*" class="hidden"
+                    (change)="onFileSelected($event)" />
+
+            </div>
+
+            <!-- Name -->
+            <h2 class="mt-4 text-3xl font-bold text-gray-900 text-center">
+                {{studentData.name}}
+            </h2>
+
+            <!-- Details -->
+            <div class="mt-2 text-gray-600 text-center text-base leading-relaxed">
+                <p class="font-medium"><span class="font-semibold text-gray-800">{{studentData.hostel}}</span></p>
+                <p class="font-medium"><span class="font-semibold text-gray-800">{{studentData.roll_no}}</span></p>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t my-8"></div>
+
+        <!-- QR Code Section -->
+        <div class="flex flex-col items-center">
+            <!-- Outer Grey Background -->
+            <qrcode [qrdata]="studentJsonString" [width]="220" [errorCorrectionLevel]="'M'"
+                class="rounded-lg overflow-hidden"></qrcode>
+
+
+            <button (click)="refreshQR()" class="w-full text-center
+         bg-black hover:bg-blue-700 active:bg-blue-900
+         text-white py-3 rounded-xl
+         transition-colors duration-200
+         font-semibold flex items-center justify-center gap-2 cursor-pointer">
+                <span class="material-icons">sync</span>
+                Refresh QR Code
+            </button>
+        </div>
+
+        <!-- Feedback & Rating Buttons -->
+        <div class="mt-10 space-y-3">
+            <button
+                class="w-full py-3 rounded-xl shadow-md bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium flex items-center justify-center gap-2">
+                <span class="material-icons">feedback</span>
+                Give Feedback
+            </button>
+
+            <button
+                class="w-full py-3 rounded-xl shadow-md bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold flex items-center justify-center gap-2">
+                <span class="material-icons">star_rate</span>
+                Rate the App
+            </button>
+        </div>
+    </div>
+</div>
